@@ -14,14 +14,14 @@ dependencyResolutionManagement {
     }
 }
 
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-
 rootProject.name = "B-Material"
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":app")
 include(":ui-core:tokens")
-include(":ui-core:foundation")
 include(":ui-core:resources")
+include(":ui-core:foundation")
 include(":ui-components:button")
 include(":ui-components:slider")
 include(":ui-components:text")

@@ -147,16 +147,16 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 androidTest = { id = "com.android.test", version.ref = "androidGradlePlugin"}
 
 # plugin in this project
-pockizzy-android-application = { id = "pockizzy.android.application", version = "unspecified"}
-pockizzy-android-application-compose = { id = "pockizzy.android.application.compose", version = "unspecified"}
-pockizzy-android-library = { id = "pockizzy.android.library", version = "unspecified"}
-pockizzy-android-library-compose = { id = "pockizzy.android.library.compose", version = "unspecified"}
-pockizzy-android-feature = { id = "pockizzy.android.feature", version = "unspecified"}
-pockizzy-android-domain = { id = "pockizzy.android.domain", version = "unspecified"}
-pockizzy-android-hilt = { id = "pockizzy.android.hilt", version = "unspecified"}
-pockizzy-android-room = { id = "pockizzy.android.room", version = "unspecified"}
-pockizzy-android-application-jacoco = { id = "pockizzy.android.application.jacoco", version = "unspecified"}
-pockizzy-android-library-jacoco = { id = "pockizzy.android.library.jacoco", version = "unspecified"}
-pockizzy-android-navigation = { id = "pockizzy.android.navigation", version = "unspecified"}
+bmaterial-android-application = { id = "bmaterial.android.application", version = "unspecified"}
+bmaterial-android-application-compose = { id = "bmaterial.android.application.compose", version = "unspecified"}
+bmaterial-android-library = { id = "bmaterial.android.library", version = "unspecified"}
+bmaterial-android-library-compose = { id = "bmaterial.android.library.compose", version = "unspecified"}
+bmaterial-android-feature = { id = "bmaterial.android.feature", version = "unspecified"}
+bmaterial-android-domain = { id = "bmaterial.android.domain", version = "unspecified"}
+bmaterial-android-hilt = { id = "bmaterial.android.hilt", version = "unspecified"}
+bmaterial-android-room = { id = "bmaterial.android.room", version = "unspecified"}
+bmaterial-android-application-jacoco = { id = "bmaterial.android.application.jacoco", version = "unspecified"}
+bmaterial-android-library-jacoco = { id = "bmaterial.android.library.jacoco", version = "unspecified"}
+bmaterial-android-navigation = { id = "bmaterial.android.navigation", version = "unspecified"}
 
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "11.5.1" }

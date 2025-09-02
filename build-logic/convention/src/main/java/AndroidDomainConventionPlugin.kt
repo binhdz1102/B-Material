@@ -7,8 +7,8 @@ class AndroidDomainConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             pluginManager.apply{
-                apply("pockizzy.android.library")
-                apply("pockizzy.android.library.jacoco")
+                apply("bmaterial.android.library")
+                apply("bmaterial.android.library.jacoco")
                 apply("com.google.devtools.ksp")
             }
 

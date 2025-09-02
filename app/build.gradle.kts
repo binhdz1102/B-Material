@@ -1,9 +1,9 @@
 plugins {
-    alias(libs.plugins.pockizzy.android.application)
-    alias(libs.plugins.pockizzy.android.application.compose)
-    alias(libs.plugins.pockizzy.android.application.jacoco)
-    alias(libs.plugins.pockizzy.android.hilt)
-    alias(libs.plugins.pockizzy.android.navigation)
+    alias(libs.plugins.bmaterial.android.application)
+    alias(libs.plugins.bmaterial.android.application.compose)
+    alias(libs.plugins.bmaterial.android.application.jacoco)
+    alias(libs.plugins.bmaterial.android.hilt)
+    alias(libs.plugins.bmaterial.android.navigation)
 }
 
 android {

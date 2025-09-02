@@ -38,47 +38,47 @@ dependencies {
 gradlePlugin {
     plugins {
         register("androidApplication") {
-            id = "pockizzy.android.application"
+            id = "bmaterial.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
         register("androidApplicationCompose") {
-            id = "pockizzy.android.application.compose"
+            id = "bmaterial.android.application.compose"
             implementationClass = "AndroidApplicationComposeConventionPlugin"
         }
         register("androidApplicationJacoco") {
-            id = "pockizzy.android.application.jacoco"
+            id = "bmaterial.android.application.jacoco"
             implementationClass = "AndroidApplicationJacocoConventionPlugin"
         }
         register("androidLibraryCompose") {
-            id = "pockizzy.android.library.compose"
+            id = "bmaterial.android.library.compose"
             implementationClass = "AndroidLibraryComposeConventionPlugin"
         }
         register("androidLibrary") {
-            id = "pockizzy.android.library"
+            id = "bmaterial.android.library"
             implementationClass = "AndroidLibraryConventionPlugin"
         }
         register("androidLibraryJacoco") {
-            id = "pockizzy.android.library.jacoco"
+            id = "bmaterial.android.library.jacoco"
             implementationClass = "AndroidLibraryJacocoConventionPlugin"
         }
         register("androidFeature") {
-            id = "pockizzy.android.feature"
+            id = "bmaterial.android.feature"
             implementationClass = "AndroidFeatureConventionPlugin"
         }
         register("androidDomain") {
-            id = "pockizzy.android.feature"
+            id = "bmaterial.android.feature"
             implementationClass = "AndroidDomainConventionPlugin"
         }
         register("androidHilt") {
-            id = "pockizzy.android.hilt"
+            id = "bmaterial.android.hilt"
             implementationClass = "AndroidHiltConventionPlugin"
         }
         register("androidRoom") {
-            id = "pockizzy.android.room"
+            id = "bmaterial.android.room"
             implementationClass = "AndroidRoomConventionPlugin"
         }
         register("androidNavigation") {
-            id = "pockizzy.android.navigation"
+            id = "bmaterial.android.navigation"
             implementationClass = "AndroidNavigationConventionPlugin"
         }
     }

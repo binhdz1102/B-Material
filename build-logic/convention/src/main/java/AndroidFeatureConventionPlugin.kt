@@ -7,9 +7,9 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             pluginManager.apply{
-                apply("pockizzy.android.library")
-                apply("pockizzy.android.hilt")
-                apply("pockizzy.android.library.jacoco")
+                apply("bmaterial.android.library")
+                apply("bmaterial.android.hilt")
+                apply("bmaterial.android.library.jacoco")
             }
 
             dependencies{
