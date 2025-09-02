@@ -31,4 +31,5 @@ android {
 dependencies {
     implementation(libs.androidx.lifecycle.runtimeCompose)
     implementation(libs.androidx.core.ktx)
+    implementation(projects.uiCore.tokens)
 }

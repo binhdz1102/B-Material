@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.b231001.bmaterial.ui.theme.BMaterialTheme
+import com.b231001.bmaterial.uicore.tokens.LocalColorPalette
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,6 +21,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             BMaterialTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+//                    val temp = LocalColorPalette.current.red.c10
+
+
                     Greeting(
                         name = "Android",
 
