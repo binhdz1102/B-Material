@@ -107,7 +107,7 @@ data class ColorPalette(
     val neutralVariant: ColorModel
 )
 
-val ColorPaletteDefault = ColorPalette(
+internal val colorPaletteDefault = ColorPalette(
     blue = BlueTones,
     green = GreenTones,
     orange = OrangeTones,
@@ -118,6 +118,9 @@ val ColorPaletteDefault = ColorPalette(
     neutralVariant = NeutralVariantTones
 )
 
+/**
+ * Provides access to the raw app ColorPalette (tonal color ramps).
+ */
 val LocalColorPalette = staticCompositionLocalOf<ColorPalette> {
     error("ColorPalette is not provided!")
 }
