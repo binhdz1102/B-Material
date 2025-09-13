@@ -7,46 +7,56 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.b231001.bmaterial.ui.theme.BMaterialTheme
-import com.b231001.bmaterial.uicore.tokens.LocalColorPalette
+import com.b231001.bmaterial.uicore.resources.ui.InconsolataFontPreviewAll
+import com.b231001.bmaterial.uicore.resources.ui.InterFontPreviewAll
+import com.b231001.bmaterial.uicore.resources.ui.RobotoFontPreview
+import com.b231001.bmaterial.uicore.resources.ui.RubikFontPreview
+import com.b231001.bmaterial.uicore.resources.ui.SourGummyFontPreviewAll
+import com.b231001.bmaterial.uicore.tokens.BTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            BMaterialTheme {
+            BTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    val temp = LocalColorPalette.current.red.c10
-
-
-                    Greeting(
-                        name = "Android",
-
-                        modifier = Modifier.padding(innerPadding)
+                    RubikFontPreview(
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .fillMaxSize(),
                     )
+
+//                    InconsolataFontPreviewAll(
+//                        modifier = Modifier
+//                            .padding(innerPadding)
+//                            .fillMaxSize(),
+//                    )
+
+//                    RobotoFontPreview(
+//                    Modifier
+//                        .padding(innerPadding)
+//                        .fillMaxSize()
+//                    )
+
+
+
+//                    InterFontPreviewAll(Modifier
+//                        .padding(innerPadding)
+//                        .fillMaxSize()
+//                    )
+
+
+//                    SourGummyFontPreviewAll(Modifier
+//                        .padding(innerPadding)
+//                        .fillMaxSize()
+//                    )
+
+
+
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name! 3",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    BMaterialTheme {
-        Greeting("Android")
     }
 }
