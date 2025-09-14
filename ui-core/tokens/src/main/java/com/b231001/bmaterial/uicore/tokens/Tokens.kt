@@ -10,7 +10,8 @@ data class Tokens(
     val colorScheme: ColorScheme,
     val typography: BTypography,
     val shapes: BShapes,
-    val sizes: BSizes
+    val sizes: BSizes,
+    val paddings: BPaddings
 )
 
 val LocalTokens = staticCompositionLocalOf<Tokens> {
@@ -32,4 +33,7 @@ object BTokens {
 
     val sizes: BSizes
         @Composable get() = LocalTokens.current.sizes
+
+    val paddings: BPaddings
+        @Composable get() = LocalTokens.current.paddings
 }

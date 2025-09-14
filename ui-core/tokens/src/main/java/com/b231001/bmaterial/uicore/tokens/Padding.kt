@@ -5,26 +5,18 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Immutable
-data class BSizes(
+data class BPaddings(
     val extraSmall: Dp,
     val small: Dp,
     val medium: Dp,
     val large: Dp,
-    val extraLarge: Dp,
-
-    val iconSmall: Dp,
-    val iconMedium: Dp,
-    val iconLarge: Dp
+    val extraLarge: Dp
 )
 
-val BSizesDefault = BSizes(
+val BPaddingsDefault = BPaddings(
     extraSmall = 2.dp,
     small = 4.dp,
     medium = 8.dp,
     large = 16.dp,
-    extraLarge = 24.dp,
-
-    iconSmall = 12.dp,
-    iconMedium = 24.dp,
-    iconLarge = 32.dp
+    extraLarge = 24.dp
 )

@@ -215,6 +215,7 @@ fun BTheme(
     typography: BTypography = BTypographyDefault,
     shapes: BShapes = BShapesDefault,
     sizes: BSizes = BSizesDefault,
+    paddings: BPaddings = BPaddingsDefault,
     content: @Composable () -> Unit
 ) {
     val scheme = if (darkTheme) darkColorScheme() else lightColorScheme()
@@ -224,16 +225,12 @@ fun BTheme(
         colorScheme = scheme,
         typography = typography,
         shapes = shapes,
-        sizes = sizes
+        sizes = sizes,
+        paddings = paddings
     )
 
     CompositionLocalProvider(
-        LocalColorPalette provides palette,
-        LocalColorScheme provides scheme,
-        LocalTypography provides typography,
-        LocalShapes provides shapes,
-        LocalTokens provides tokens,
-        LocalSizes provides sizes
+        LocalTokens provides tokens
     ) {
         content()
     }

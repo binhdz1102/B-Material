@@ -35,4 +35,6 @@ dependencies {
     implementation(projects.uiCore.tokens)
     implementation(projects.uiCore.resources)
     implementation(projects.uiCore.foundation)
+
+    implementation(projects.uiComponents.button)
 }

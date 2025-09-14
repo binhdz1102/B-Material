@@ -2,7 +2,6 @@ package com.b231001.bmaterial.uicore.tokens
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 
@@ -22,7 +21,3 @@ val BShapesDefault = BShapes(
     large = RoundedCornerShape(16.dp),
     extraLarge = RoundedCornerShape(28.dp)
 )
-
-val LocalShapes = staticCompositionLocalOf<BShapes> {
-    error("BShapes is not provided!")
-}

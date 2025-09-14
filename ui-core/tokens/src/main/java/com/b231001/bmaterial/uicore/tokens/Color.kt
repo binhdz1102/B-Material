@@ -1,7 +1,6 @@
 package com.b231001.bmaterial.uicore.tokens
 
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 @Immutable
@@ -117,10 +116,3 @@ internal val colorPaletteDefault = ColorPalette(
     neutral = NeutralTones,
     neutralVariant = NeutralVariantTones
 )
-
-/**
- * Provides access to the raw app ColorPalette (tonal color ramps).
- */
-val LocalColorPalette = staticCompositionLocalOf<ColorPalette> {
-    error("ColorPalette is not provided!")
-}
