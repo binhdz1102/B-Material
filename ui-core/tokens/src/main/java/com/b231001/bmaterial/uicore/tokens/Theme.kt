@@ -212,19 +212,23 @@ val LocalColorScheme = staticCompositionLocalOf<ColorScheme> {
 fun BTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     palette: ColorPalette = colorPaletteDefault,
+    typography: BTypography = BTypographyDefault,
     content: @Composable () -> Unit
 ) {
-    val colors = if (darkTheme) {
-        darkColorScheme()
-    } else {
-        lightColorScheme()
-    }
+    val scheme = if (darkTheme) darkColorScheme() else lightColorScheme()
+
+    val tokens = Tokens(
+        colorPalette = palette,
+        colorScheme = scheme,
+        typography = typography
+    )
 
     CompositionLocalProvider(
         LocalColorPalette provides palette,
-        LocalColorScheme provides colors
+        LocalColorScheme provides scheme,
+        LocalTypography provides typography,
+        LocalTokens provides tokens,
     ) {
         content()
     }
 }
-
