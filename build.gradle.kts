@@ -10,3 +10,11 @@ plugins {
     alias(libs.plugins.androidTest) apply false
     alias(libs.plugins.ktlint)
 }
+
+subprojects {
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
+
+    configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+        android.set(true)
+    }
+}

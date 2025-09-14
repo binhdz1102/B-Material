@@ -28,7 +28,7 @@ data class BTypography(
 
     val labelLarge: TextStyle,
     val labelMedium: TextStyle,
-    val labelSmall: TextStyle,
+    val labelSmall: TextStyle
 )
 
 /**
@@ -150,7 +150,7 @@ val BTypographyDefault = BTypography(
         fontSize = 11.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp
-    ),
+    )
 )
 
 val LocalTypography = staticCompositionLocalOf<BTypography> {

@@ -19,7 +19,7 @@ internal val Rubik = FontFamily(
     Font(R.font.rubik_extrabold, FontWeight.W800),
     Font(R.font.rubik_extrabold_italic, FontWeight.W800, FontStyle.Italic),
     Font(R.font.rubik_black, FontWeight.W900),
-    Font(R.font.rubik_black_italic, FontWeight.W900, FontStyle.Italic),
+    Font(R.font.rubik_black_italic, FontWeight.W900, FontStyle.Italic)
 )
 
 // Inconsolata (Normal width)
@@ -31,7 +31,7 @@ internal val Inconsolata = FontFamily(
     Font(R.font.inconsolata_semibold, FontWeight.W600),
     Font(R.font.inconsolata_bold, FontWeight.W700),
     Font(R.font.inconsolata_extrabold, FontWeight.W800),
-    Font(R.font.inconsolata_black, FontWeight.W900),
+    Font(R.font.inconsolata_black, FontWeight.W900)
 )
 
 // Condensed
@@ -43,7 +43,7 @@ internal val InconsolataCondensed = FontFamily(
     Font(R.font.inconsolata_condensed_semibold, FontWeight.W600),
     Font(R.font.inconsolata_condensed_bold, FontWeight.W700),
     Font(R.font.inconsolata_condensed_extrabold, FontWeight.W800),
-    Font(R.font.inconsolata_condensed_black, FontWeight.W900),
+    Font(R.font.inconsolata_condensed_black, FontWeight.W900)
 )
 
 // Expanded
@@ -55,7 +55,7 @@ internal val InconsolataExpanded = FontFamily(
     Font(R.font.inconsolata_expanded_semibold, FontWeight.W600),
     Font(R.font.inconsolata_expanded_bold, FontWeight.W700),
     Font(R.font.inconsolata_expanded_extrabold, FontWeight.W800),
-    Font(R.font.inconsolata_expanded_black, FontWeight.W900),
+    Font(R.font.inconsolata_expanded_black, FontWeight.W900)
 )
 
 // ExtraCondensed
@@ -67,7 +67,7 @@ internal val InconsolataExtraCondensed = FontFamily(
     Font(R.font.inconsolata_extracondensed_semibold, FontWeight.W600),
     Font(R.font.inconsolata_extracondensed_bold, FontWeight.W700),
     Font(R.font.inconsolata_extracondensed_extrabold, FontWeight.W800),
-    Font(R.font.inconsolata_extracondensed_black, FontWeight.W900),
+    Font(R.font.inconsolata_extracondensed_black, FontWeight.W900)
 )
 
 // ExtraExpanded
@@ -79,7 +79,7 @@ internal val InconsolataExtraExpanded = FontFamily(
     Font(R.font.inconsolata_extraexpanded_semibold, FontWeight.W600),
     Font(R.font.inconsolata_extraexpanded_bold, FontWeight.W700),
     Font(R.font.inconsolata_extraexpanded_extrabold, FontWeight.W800),
-    Font(R.font.inconsolata_extraexpanded_black, FontWeight.W900),
+    Font(R.font.inconsolata_extraexpanded_black, FontWeight.W900)
 )
 
 // SemiCondensed
@@ -91,7 +91,7 @@ internal val InconsolataSemiCondensed = FontFamily(
     Font(R.font.inconsolata_semicondensed_semibold, FontWeight.W600),
     Font(R.font.inconsolata_semicondensed_bold, FontWeight.W700),
     Font(R.font.inconsolata_semicondensed_extrabold, FontWeight.W800),
-    Font(R.font.inconsolata_semicondensed_black, FontWeight.W900),
+    Font(R.font.inconsolata_semicondensed_black, FontWeight.W900)
 )
 
 // SemiExpanded
@@ -103,7 +103,7 @@ internal val InconsolataSemiExpanded = FontFamily(
     Font(R.font.inconsolata_semiexpanded_semibold, FontWeight.W600),
     Font(R.font.inconsolata_semiexpanded_bold, FontWeight.W700),
     Font(R.font.inconsolata_semiexpanded_extrabold, FontWeight.W800),
-    Font(R.font.inconsolata_semiexpanded_black, FontWeight.W900),
+    Font(R.font.inconsolata_semiexpanded_black, FontWeight.W900)
 )
 
 // UltraCondensed
@@ -115,7 +115,7 @@ internal val InconsolataUltraCondensed = FontFamily(
     Font(R.font.inconsolata_ultracondensed_semibold, FontWeight.W600),
     Font(R.font.inconsolata_ultracondensed_bold, FontWeight.W700),
     Font(R.font.inconsolata_ultracondensed_extrabold, FontWeight.W800),
-    Font(R.font.inconsolata_ultracondensed_black, FontWeight.W900),
+    Font(R.font.inconsolata_ultracondensed_black, FontWeight.W900)
 )
 
 // UltraExpanded
@@ -127,7 +127,7 @@ internal val InconsolataUltraExpanded = FontFamily(
     Font(R.font.inconsolata_ultraexpanded_semibold, FontWeight.W600),
     Font(R.font.inconsolata_ultraexpanded_bold, FontWeight.W700),
     Font(R.font.inconsolata_ultraexpanded_extrabold, FontWeight.W800),
-    Font(R.font.inconsolata_ultraexpanded_black, FontWeight.W900),
+    Font(R.font.inconsolata_ultraexpanded_black, FontWeight.W900)
 )
 
 // Roboto
@@ -149,7 +149,7 @@ internal val Roboto = FontFamily(
     Font(R.font.roboto_extrabold, FontWeight.W800),
     Font(R.font.roboto_extrabold_italic, FontWeight.W800, FontStyle.Italic),
     Font(R.font.roboto_black, FontWeight.W900),
-    Font(R.font.roboto_black_italic, FontWeight.W900, FontStyle.Italic),
+    Font(R.font.roboto_black_italic, FontWeight.W900, FontStyle.Italic)
 )
 
 val RobotoCondensed = FontFamily(
@@ -170,7 +170,7 @@ val RobotoCondensed = FontFamily(
     Font(R.font.roboto_condensed_extrabold, FontWeight.W800),
     Font(R.font.roboto_condensed_extrabold_italic, FontWeight.W800, FontStyle.Italic),
     Font(R.font.roboto_condensed_black, FontWeight.W900),
-    Font(R.font.roboto_condensed_black_italic, FontWeight.W900, FontStyle.Italic),
+    Font(R.font.roboto_condensed_black_italic, FontWeight.W900, FontStyle.Italic)
 )
 
 val RobotoSemiCondensed = FontFamily(
@@ -191,7 +191,7 @@ val RobotoSemiCondensed = FontFamily(
     Font(R.font.roboto_semicondensed_extrabold, FontWeight.W800),
     Font(R.font.roboto_semicondensed_extrabold_italic, FontWeight.W800, FontStyle.Italic),
     Font(R.font.roboto_semicondensed_black, FontWeight.W900),
-    Font(R.font.roboto_semicondensed_black_italic, FontWeight.W900, FontStyle.Italic),
+    Font(R.font.roboto_semicondensed_black_italic, FontWeight.W900, FontStyle.Italic)
 )
 
 // Inter 18pt
@@ -213,7 +213,7 @@ val Inter18 = FontFamily(
     Font(R.font.inter_18pt_extrabold, FontWeight.W800),
     Font(R.font.inter_18pt_extrabold_italic, FontWeight.W800, FontStyle.Italic),
     Font(R.font.inter_18pt_black, FontWeight.W900),
-    Font(R.font.inter_18pt_black_italic, FontWeight.W900, FontStyle.Italic),
+    Font(R.font.inter_18pt_black_italic, FontWeight.W900, FontStyle.Italic)
 )
 
 // Inter 24pt
@@ -235,7 +235,7 @@ val Inter24 = FontFamily(
     Font(R.font.inter_24pt_extrabold, FontWeight.W800),
     Font(R.font.inter_24pt_extrabold_italic, FontWeight.W800, FontStyle.Italic),
     Font(R.font.inter_24pt_black, FontWeight.W900),
-    Font(R.font.inter_24pt_black_italic, FontWeight.W900, FontStyle.Italic),
+    Font(R.font.inter_24pt_black_italic, FontWeight.W900, FontStyle.Italic)
 )
 
 // Inter 28pt
@@ -257,7 +257,7 @@ val Inter28 = FontFamily(
     Font(R.font.inter_28pt_extrabold, FontWeight.W800),
     Font(R.font.inter_28pt_extrabold_italic, FontWeight.W800, FontStyle.Italic),
     Font(R.font.inter_28pt_black, FontWeight.W900),
-    Font(R.font.inter_28pt_black_italic, FontWeight.W900, FontStyle.Italic),
+    Font(R.font.inter_28pt_black_italic, FontWeight.W900, FontStyle.Italic)
 )
 
 // Sour Gummy Normal width
@@ -279,7 +279,7 @@ val SourGummy = FontFamily(
     Font(R.font.sourgummy_extrabold, FontWeight.W800),
     Font(R.font.sourgummy_extrabold_italic, FontWeight.W800, FontStyle.Italic),
     Font(R.font.sourgummy_black, FontWeight.W900),
-    Font(R.font.sourgummy_black_italic, FontWeight.W900, FontStyle.Italic),
+    Font(R.font.sourgummy_black_italic, FontWeight.W900, FontStyle.Italic)
 )
 
 // Sour Gummy Expanded
@@ -301,6 +301,5 @@ val SourGummyExpanded = FontFamily(
     Font(R.font.sourgummy_expanded_extrabold, FontWeight.W800),
     Font(R.font.sourgummy_expanded_extrabold_italic, FontWeight.W800, FontStyle.Italic),
     Font(R.font.sourgummy_expanded_black, FontWeight.W900),
-    Font(R.font.sourgummy_expanded_black_italic, FontWeight.W900, FontStyle.Italic),
+    Font(R.font.sourgummy_expanded_black_italic, FontWeight.W900, FontStyle.Italic)
 )
-

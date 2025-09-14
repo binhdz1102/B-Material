@@ -2,7 +2,6 @@ package com.b231001.bmaterial.uicore.resources.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -10,7 +9,6 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -118,13 +116,13 @@ private fun FontPreviewGroup(
 @Composable
 fun RubikFontPreview(modifier: Modifier = Modifier) {
     val weights = listOf(
-        "Light (300)"     to FontWeight.W300,
-        "Regular (400)"   to FontWeight.W400,
-        "Medium (500)"    to FontWeight.W500,
-        "SemiBold (600)"  to FontWeight.W600,
-        "Bold (700)"      to FontWeight.W700,
+        "Light (300)" to FontWeight.W300,
+        "Regular (400)" to FontWeight.W400,
+        "Medium (500)" to FontWeight.W500,
+        "SemiBold (600)" to FontWeight.W600,
+        "Bold (700)" to FontWeight.W700,
         "ExtraBold (800)" to FontWeight.W800,
-        "Black (900)"     to FontWeight.W900,
+        "Black (900)" to FontWeight.W900
     )
     FontPreviewGroup(
         screenTitle = "Rubik Font Family",
@@ -139,25 +137,25 @@ fun RubikFontPreview(modifier: Modifier = Modifier) {
 @Composable
 fun InconsolataFontPreviewAll(modifier: Modifier = Modifier) {
     val groups = listOf(
-        "Inconsolata (Normal)"       to Inconsolata,
-        "Inconsolata Condensed"      to InconsolataCondensed,
+        "Inconsolata (Normal)" to Inconsolata,
+        "Inconsolata Condensed" to InconsolataCondensed,
         "Inconsolata ExtraCondensed" to InconsolataExtraCondensed,
-        "Inconsolata SemiCondensed"  to InconsolataSemiCondensed,
-        "Inconsolata Expanded"       to InconsolataExpanded,
-        "Inconsolata ExtraExpanded"  to InconsolataExtraExpanded,
-        "Inconsolata SemiExpanded"   to InconsolataSemiExpanded,
+        "Inconsolata SemiCondensed" to InconsolataSemiCondensed,
+        "Inconsolata Expanded" to InconsolataExpanded,
+        "Inconsolata ExtraExpanded" to InconsolataExtraExpanded,
+        "Inconsolata SemiExpanded" to InconsolataSemiExpanded,
         "Inconsolata UltraCondensed" to InconsolataUltraCondensed,
-        "Inconsolata UltraExpanded"  to InconsolataUltraExpanded,
+        "Inconsolata UltraExpanded" to InconsolataUltraExpanded
     )
     val weights = listOf(
         "ExtraLight (200)" to FontWeight.W200,
-        "Light (300)"      to FontWeight.W300,
-        "Regular (400)"    to FontWeight.W400,
-        "Medium (500)"     to FontWeight.W500,
-        "SemiBold (600)"   to FontWeight.W600,
-        "Bold (700)"       to FontWeight.W700,
-        "ExtraBold (800)"  to FontWeight.W800,
-        "Black (900)"      to FontWeight.W900,
+        "Light (300)" to FontWeight.W300,
+        "Regular (400)" to FontWeight.W400,
+        "Medium (500)" to FontWeight.W500,
+        "SemiBold (600)" to FontWeight.W600,
+        "Bold (700)" to FontWeight.W700,
+        "ExtraBold (800)" to FontWeight.W800,
+        "Black (900)" to FontWeight.W900
     )
 
     FontPreviewGroup(
@@ -174,19 +172,19 @@ fun InconsolataFontPreviewAll(modifier: Modifier = Modifier) {
 fun RobotoFontPreview(modifier: Modifier = Modifier) {
     val groups = listOf(
         "Roboto (Normal width)" to Roboto,
-        "Roboto Condensed"      to RobotoCondensed,
-        "Roboto SemiCondensed"  to RobotoSemiCondensed,
+        "Roboto Condensed" to RobotoCondensed,
+        "Roboto SemiCondensed" to RobotoSemiCondensed
     )
     val weights = listOf(
-        "Thin (100)"       to FontWeight.W100,
+        "Thin (100)" to FontWeight.W100,
         "ExtraLight (200)" to FontWeight.W200,
-        "Light (300)"      to FontWeight.W300,
-        "Regular (400)"    to FontWeight.W400,
-        "Medium (500)"     to FontWeight.W500,
-        "SemiBold (600)"   to FontWeight.W600,
-        "Bold (700)"       to FontWeight.W700,
-        "ExtraBold (800)"  to FontWeight.W800,
-        "Black (900)"      to FontWeight.W900,
+        "Light (300)" to FontWeight.W300,
+        "Regular (400)" to FontWeight.W400,
+        "Medium (500)" to FontWeight.W500,
+        "SemiBold (600)" to FontWeight.W600,
+        "Bold (700)" to FontWeight.W700,
+        "ExtraBold (800)" to FontWeight.W800,
+        "Black (900)" to FontWeight.W900
     )
     FontPreviewGroup(
         screenTitle = "Roboto Font Family – Normal / Condensed / SemiCondensed",
@@ -208,18 +206,18 @@ fun InterFontPreviewAll(
     val groups = listOf(
         "Inter 18pt" to inter18,
         "Inter 24pt" to inter24,
-        "Inter 28pt" to inter28,
+        "Inter 28pt" to inter28
     )
     val weights = listOf(
-        "Thin (100)"       to FontWeight.W100,
+        "Thin (100)" to FontWeight.W100,
         "ExtraLight (200)" to FontWeight.W200,
-        "Light (300)"      to FontWeight.W300,
-        "Regular (400)"    to FontWeight.W400,
-        "Medium (500)"     to FontWeight.W500,
-        "SemiBold (600)"   to FontWeight.W600,
-        "Bold (700)"       to FontWeight.W700,
-        "ExtraBold (800)"  to FontWeight.W800,
-        "Black (900)"      to FontWeight.W900,
+        "Light (300)" to FontWeight.W300,
+        "Regular (400)" to FontWeight.W400,
+        "Medium (500)" to FontWeight.W500,
+        "SemiBold (600)" to FontWeight.W600,
+        "Bold (700)" to FontWeight.W700,
+        "ExtraBold (800)" to FontWeight.W800,
+        "Black (900)" to FontWeight.W900
     )
     FontPreviewGroup(
         screenTitle = "Inter Font Family – 18pt / 24pt / 28pt",
@@ -238,19 +236,19 @@ fun SourGummyFontPreviewAll(
     expanded: FontFamily = SourGummyExpanded
 ) {
     val groups = listOf(
-        "Sour Gummy (Normal)"     to normal,
-        "Sour Gummy Expanded"     to expanded,
+        "Sour Gummy (Normal)" to normal,
+        "Sour Gummy Expanded" to expanded
     )
     val weights = listOf(
-        "Thin (100)"       to FontWeight.W100,
+        "Thin (100)" to FontWeight.W100,
         "ExtraLight (200)" to FontWeight.W200,
-        "Light (300)"      to FontWeight.W300,
-        "Regular (400)"    to FontWeight.W400,
-        "Medium (500)"     to FontWeight.W500,
-        "SemiBold (600)"   to FontWeight.W600,
-        "Bold (700)"       to FontWeight.W700,
-        "ExtraBold (800)"  to FontWeight.W800,
-        "Black (900)"      to FontWeight.W900,
+        "Light (300)" to FontWeight.W300,
+        "Regular (400)" to FontWeight.W400,
+        "Medium (500)" to FontWeight.W500,
+        "SemiBold (600)" to FontWeight.W600,
+        "Bold (700)" to FontWeight.W700,
+        "ExtraBold (800)" to FontWeight.W800,
+        "Black (900)" to FontWeight.W900
     )
     FontPreviewGroup(
         screenTitle = "Sour Gummy Font Family – Normal / SemiExpanded / Expanded",

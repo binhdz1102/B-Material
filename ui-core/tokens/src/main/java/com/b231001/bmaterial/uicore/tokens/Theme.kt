@@ -91,7 +91,7 @@ fun lightColorScheme(
     overlayFocus: Color = Color(0xFF000000).copy(alpha = 0.12f),
     surface1: Color = colorPaletteDefault.neutral.c99 ?: Color.White,
     surface2: Color = colorPaletteDefault.neutral.c95 ?: Color(0xFFF5F5F7),
-    surface3: Color = colorPaletteDefault.neutral.c90,
+    surface3: Color = colorPaletteDefault.neutral.c90
 ): ColorScheme = ColorScheme(
     primary = primary,
     onPrimary = onPrimary,
@@ -213,6 +213,8 @@ fun BTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     palette: ColorPalette = colorPaletteDefault,
     typography: BTypography = BTypographyDefault,
+    shapes: BShapes = BShapesDefault,
+    sizes: BSizes = BSizesDefault,
     content: @Composable () -> Unit
 ) {
     val scheme = if (darkTheme) darkColorScheme() else lightColorScheme()
@@ -220,14 +222,18 @@ fun BTheme(
     val tokens = Tokens(
         colorPalette = palette,
         colorScheme = scheme,
-        typography = typography
+        typography = typography,
+        shapes = shapes,
+        sizes = sizes
     )
 
     CompositionLocalProvider(
         LocalColorPalette provides palette,
         LocalColorScheme provides scheme,
         LocalTypography provides typography,
+        LocalShapes provides shapes,
         LocalTokens provides tokens,
+        LocalSizes provides sizes
     ) {
         content()
     }

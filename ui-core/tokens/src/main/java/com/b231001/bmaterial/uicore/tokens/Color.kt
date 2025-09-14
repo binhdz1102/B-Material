@@ -13,7 +13,7 @@ data class ColorModel(
     val c80: Color,
     val c90: Color,
     val c95: Color? = null,
-    val c99: Color? = null,
+    val c99: Color? = null
 )
 
 private val BlueTones = ColorModel(
@@ -124,6 +124,3 @@ internal val colorPaletteDefault = ColorPalette(
 val LocalColorPalette = staticCompositionLocalOf<ColorPalette> {
     error("ColorPalette is not provided!")
 }
-
-
-

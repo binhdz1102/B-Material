@@ -8,7 +8,9 @@ import androidx.compose.runtime.staticCompositionLocalOf
 data class Tokens(
     val colorPalette: ColorPalette,
     val colorScheme: ColorScheme,
-    val typography: BTypography
+    val typography: BTypography,
+    val shapes: BShapes,
+    val sizes: BSizes
 )
 
 val LocalTokens = staticCompositionLocalOf<Tokens> {
@@ -24,4 +26,10 @@ object BTokens {
 
     val colorPalette: ColorPalette
         @Composable get() = LocalTokens.current.colorPalette
+
+    val shapes: BShapes
+        @Composable get() = LocalTokens.current.shapes
+
+    val sizes: BSizes
+        @Composable get() = LocalTokens.current.sizes
 }
