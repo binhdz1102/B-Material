@@ -23,28 +23,29 @@ import androidx.compose.ui.unit.dp
     showSystemUi = true,
     device = "spec:shape=Normal,width=1080,height=1920,unit=px,dpi=440"
 )
+
 @Composable
 fun BButtonGallery() {
-    var state1 by remember { mutableStateOf(true) }
-    var state2 by remember { mutableStateOf(true) }
-    var state3 by remember { mutableStateOf(true) }
-    var state4 by remember { mutableStateOf(true) }
-    var state5 by remember { mutableStateOf(true) }
-    var state6 by remember { mutableStateOf(true) }
-    var state7 by remember { mutableStateOf(true) }
+    var state1 by remember { mutableStateOf(false) }
+    var state2 by remember { mutableStateOf(false) }
+    var state3 by remember { mutableStateOf(false) }
+    var state4 by remember { mutableStateOf(false) }
+    var state5 by remember { mutableStateOf(false) }
+    var state6 by remember { mutableStateOf(false) }
+    var state7 by remember { mutableStateOf(false) }
 
     Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             BButton(
                 modifier = Modifier.width(100.dp),
                 onClick = { state1 = !state1 },
-//                selected = state1,
+                selected = state1,
                 style = BButtonStyle.Filled
             ) { Text("Filled") }
             BButton(
                 modifier = Modifier.width(100.dp),
                 onClick = { state2 = !state2 },
-//                selected = state2,
+                selected = state2,
                 style = BButtonStyle.Tonal
             ) { Text("Tonal") }
         }
@@ -52,13 +53,13 @@ fun BButtonGallery() {
             BButton(
                 modifier = Modifier.width(100.dp),
                 onClick = { state3 = !state3 },
-//                selected = state3,
+                selected = state3,
                 style = BButtonStyle.Outlined
             ) { Text("Outlined") }
             BButton(
                 modifier = Modifier.width(100.dp),
                 onClick = { state3 = !state3 },
-//                selected = state3,
+                selected = state3,
                 style = BButtonStyle.Text
             ) { Text("Text") }
         }
@@ -66,13 +67,13 @@ fun BButtonGallery() {
             BButton(
                 modifier = Modifier.width(100.dp),
                 onClick = { state4 = !state4 },
-//                selected = state4,
+                selected = state4,
                 style = BButtonStyle.Elevated
             ) { Text("Elevated") }
             BButton(
                 modifier = Modifier.width(200.dp),
                 onClick = { state5 = !state5 },
-//                selected = state5,
+                selected = state5,
                 style = BButtonStyle.Destructive,
                 leadingIcon = {
                     Icon(Icons.Default.Favorite, contentDescription = null)
@@ -83,19 +84,19 @@ fun BButtonGallery() {
             BButton(
                 modifier = Modifier.width(100.dp),
                 onClick = { state6 = !state6 },
-//                selected = state6,
+                selected = state6,
                 style = BButtonStyle.Success
             ) { Text("Success") }
             BButton(
                 modifier = Modifier.width(100.dp),
                 onClick = { state7 = !state7 },
-//                selected = state7,
+                selected = state7,
                 style = BButtonStyle.Warning
             ) { Text("Warning") }
             BButton(
                 modifier = Modifier.width(100.dp),
                 onClick = { state7 = !state7 },
-//                selected = state7,
+                selected = state7,
                 style = BButtonStyle.Info,
                 loading = true
             ) { Text("Info") }
