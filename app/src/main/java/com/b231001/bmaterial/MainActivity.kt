@@ -4,49 +4,45 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.b231001.bmaterial.ui.theme.BMaterialTheme
-import com.b231001.bmaterial.uicore.tokens.LocalColorPalette
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.b231001.bmaterial.uicore.tokens.BTheme
+import com.b231001.bmaterial.uicore.tokens.BTokens
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            BMaterialTheme {
+            BTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    val temp = LocalColorPalette.current.red.c10
 
+                    Column(Modifier.padding(innerPadding)) {
+                        Text(
+                            text  = "Hello tokens",
+                            style = BTokens.typography.titleMedium,
+                            color = BTokens.colorScheme.primary
+                        )
 
-                    Greeting(
-                        name = "Android",
+                        val red: Color = BTokens.colorPalette.red.c40
+                        Box(
+                            Modifier
+                                .background(color = red)
+                                .size(50.dp)
+                        )
+                    }
 
-                        modifier = Modifier.padding(innerPadding)
-                    )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name! 3",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    BMaterialTheme {
-        Greeting("Android")
     }
 }
