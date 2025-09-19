@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.b231001.bmaterial.uicomponents.bswitch.BSwitchGallery
 import com.b231001.bmaterial.uicomponents.button.BButtonGallery
+import com.b231001.bmaterial.uicomponents.button.BIconButtonGallery
 import com.b231001.bmaterial.uicomponents.checkbox.BCheckboxGallery
 import com.b231001.bmaterial.uicore.tokens.BTheme
 import com.b231001.bmaterial.uicore.tokens.BTokens
@@ -38,6 +39,20 @@ class MainActivity : ComponentActivity() {
                             .verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.spacedBy(50.dp)
                     ) {
+
+
+
+
+
+
+                        BCheckboxGallery()
+
+                        BSwitchGallery()
+
+                        BIconButtonGallery()
+
+                        BButtonGallery()
+
                         Box(
                             Modifier
                                 .padding(start = BTokens.paddings.large)
@@ -53,12 +68,6 @@ class MainActivity : ComponentActivity() {
                                 color = BTokens.colorScheme.background
                             )
                         }
-
-                        BButtonGallery()
-
-                        BSwitchGallery()
-
-                        BCheckboxGallery()
                     }
                 }
             }
