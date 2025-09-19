@@ -3,14 +3,16 @@ root = true
 [*.{kt,kts}]
 
 ktlint_code_style = android
-ij_kotlin_packages_to_use_import_on_demand = false
-ktlint_standard_no_unused_imports = enabled
 
 indent_size = 4
 indent_style = space
 max_line_length = 100
 
 ij_kotlin_imports_layout = *,android.,androidx.,com.,org.,java.,kotlin.,^
+ij_kotlin_packages_to_use_import_on_demand = false
+ktlint_standard_no_unused_imports = enabled
+ktlint_standard_import-ordering = enabled
+ktlint_standard_no_wildcard_imports = enabled
 
 insert_final_newline = true
 trim_trailing_whitespace = true

@@ -37,4 +37,5 @@ dependencies {
     implementation(projects.uiCore.foundation)
 
     implementation(projects.uiComponents.button)
+    implementation(projects.uiComponents.switch)
 }

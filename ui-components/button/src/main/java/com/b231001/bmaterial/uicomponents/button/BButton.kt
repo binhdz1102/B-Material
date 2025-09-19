@@ -311,6 +311,9 @@ fun BButton(
     enabled: Boolean = true,
     style: BButtonStyle = BButtonStyle.Filled,
     size: BButtonSize = BButtonSize.Md,
+    colors: BButtonColors = BButtonDefaults.colors(style, enabled, selected),
+    metrics: BButtonMetrics = BButtonDefaults.metrics(size),
+    elevations: BButtonElevation = BButtonDefaults.elevation(style),
     leadingIcon: (@Composable (() -> Unit))? = null,
     trailingIcon: (@Composable (() -> Unit))? = null,
     loading: Boolean = false,
@@ -318,9 +321,6 @@ fun BButton(
     content: @Composable RowScope.() -> Unit
 ) {
     val cs = BTokens.colorScheme
-    val colors = BButtonDefaults.colors(style = style, enabled = enabled, selected = selected)
-    val metrics = BButtonDefaults.metrics(size)
-    val elevations = BButtonDefaults.elevation(style)
 
     val pressed by interactionSource.collectIsPressedAsState()
     val hovered by interactionSource.collectIsHoveredAsState()
