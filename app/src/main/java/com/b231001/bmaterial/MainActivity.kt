@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.b231001.bmaterial.uicomponents.bswitch.BSwitchGallery
 import com.b231001.bmaterial.uicomponents.button.BButtonGallery
+import com.b231001.bmaterial.uicomponents.checkbox.BCheckboxGallery
 import com.b231001.bmaterial.uicore.tokens.BTheme
 import com.b231001.bmaterial.uicore.tokens.BTokens
 
@@ -56,6 +57,8 @@ class MainActivity : ComponentActivity() {
                         BButtonGallery()
 
                         BSwitchGallery()
+
+                        BCheckboxGallery()
                     }
                 }
             }
