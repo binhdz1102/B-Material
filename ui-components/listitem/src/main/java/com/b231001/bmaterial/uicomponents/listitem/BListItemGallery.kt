@@ -20,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.b231001.bmaterial.uicomponents.bswitch.BSwitch
 import com.b231001.bmaterial.uicomponents.bswitch.BSwitchSize
@@ -30,6 +31,11 @@ import com.b231001.bmaterial.uicomponents.button.BButtonStyle
 import com.b231001.bmaterial.uicore.tokens.BTheme
 import com.b231001.bmaterial.uicore.tokens.BTokens
 
+@Preview(
+    name = "FHD Portrait",
+    showSystemUi = true,
+    device = "spec:shape=Normal,width=1080,height=1920,unit=px,dpi=440"
+)
 @Composable
 fun BListItemGallery() {
     BTheme {
