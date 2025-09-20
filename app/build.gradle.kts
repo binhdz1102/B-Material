@@ -40,4 +40,6 @@ dependencies {
     implementation(projects.uiComponents.switch)
     implementation(projects.uiComponents.checkbox)
     implementation(projects.uiComponents.card)
+    implementation(projects.uiComponents.listitem)
+    implementation(projects.uiComponents.chip)
 }
