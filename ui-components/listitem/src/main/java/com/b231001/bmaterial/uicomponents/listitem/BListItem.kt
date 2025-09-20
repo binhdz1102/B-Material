@@ -39,7 +39,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
@@ -334,8 +333,8 @@ fun BListItem(
         modifier = modifier
             .fillMaxWidth()
             .heightIn(min = m.minHeight)
-            .then(clickable)
-            .clip(m.shape),
+            .then(clickable),
+        shape = m.shape,
         color = if (enabled) colors.container else colors.disabledContainer,
         contentColor = if (enabled) colors.onContainer else colors.disabledContent,
         tonalElevation = m.elevation,
