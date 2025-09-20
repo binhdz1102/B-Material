@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.b231001.bmaterial.uicomponents.card"
+    namespace = "com.b231001.bmaterial.uicomponents.bswitch"
 }
 
 dependencies {
@@ -13,5 +13,4 @@ dependencies {
     implementation(libs.material)
 
     implementation(projects.uiCore.tokens)
-    implementation(projects.uiComponents.button)
 }

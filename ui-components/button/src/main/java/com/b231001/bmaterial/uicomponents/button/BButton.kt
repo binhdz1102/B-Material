@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
@@ -63,7 +64,7 @@ sealed interface BButtonStyle {
 enum class BButtonSize { Xs, Sm, Md, Lg, Xl }
 
 @Stable
-class BButtonColors(
+data class BButtonColors(
     val container: Color,
     val onContainer: Color,
     val disabledContainer: Color,
@@ -86,18 +87,59 @@ class BButtonElevation(
     val default: Dp,
     val hovered: Dp,
     val focused: Dp,
-    val pressed: Dp
+    val pressed: Dp,
+    val selected: Dp
 )
 
 object BButtonDefaults {
     /** Map style to colors from ColorScheme. */
     @Composable
-    fun colors(style: BButtonStyle, enabled: Boolean = true): BButtonColors {
+    fun colors(
+        style: BButtonStyle,
+        enabled: Boolean = true,
+        selected: Boolean = true
+    ): BButtonColors {
         val cs = BTokens.colorScheme
+
+        // Color palette disabled (common in Material: 12%/38%)
         fun disabledContainer(): Color = cs.onSurface.copy(alpha = 0.12f)
         fun disabledContent(): Color = cs.onSurface.copy(alpha = 0.38f)
 
-        return when (style) {
+        if (!enabled) {
+            return when (style) {
+                BButtonStyle.Text -> BButtonColors(
+                    container = Color.Transparent,
+                    onContainer = disabledContent(),
+                    disabledContainer = Color.Transparent,
+                    disabledOnContainer = disabledContent(),
+                    border = null
+                )
+
+                BButtonStyle.Outlined -> BButtonColors(
+                    container = Color.Transparent,
+                    onContainer = disabledContent(),
+                    disabledContainer = Color.Transparent,
+                    disabledOnContainer = disabledContent(),
+                    border = cs.outlineVariant
+                )
+
+                BButtonStyle.Filled,
+                BButtonStyle.Tonal,
+                BButtonStyle.Elevated,
+                BButtonStyle.Destructive,
+                BButtonStyle.Success,
+                BButtonStyle.Warning,
+                BButtonStyle.Info -> BButtonColors(
+                    container = disabledContainer(),
+                    onContainer = disabledContent(),
+                    disabledContainer = disabledContainer(),
+                    disabledOnContainer = disabledContent(),
+                    border = null
+                )
+            }
+        }
+
+        val base = when (style) {
             BButtonStyle.Filled -> BButtonColors(
                 container = cs.primary,
                 onContainer = cs.onPrimary,
@@ -110,21 +152,6 @@ object BButtonDefaults {
                 onContainer = cs.onSecondaryContainer,
                 disabledContainer = disabledContainer(),
                 disabledOnContainer = disabledContent()
-            )
-
-            BButtonStyle.Outlined -> BButtonColors(
-                container = Color.Transparent,
-                onContainer = cs.primary,
-                disabledContainer = Color.Transparent,
-                disabledOnContainer = cs.onSurface.copy(alpha = 0.38f),
-                border = cs.outline
-            )
-
-            BButtonStyle.Text -> BButtonColors(
-                container = Color.Transparent,
-                onContainer = cs.primary,
-                disabledContainer = Color.Transparent,
-                disabledOnContainer = cs.onSurface.copy(alpha = 0.38f)
             )
 
             BButtonStyle.Elevated -> BButtonColors(
@@ -161,7 +188,44 @@ object BButtonDefaults {
                 disabledContainer = disabledContainer(),
                 disabledOnContainer = disabledContent()
             )
+
+            BButtonStyle.Outlined -> BButtonColors(
+                container = Color.Transparent,
+                onContainer = cs.primary,
+                disabledContainer = Color.Transparent,
+                disabledOnContainer = disabledContent(),
+                border = cs.outline
+            )
+
+            BButtonStyle.Text -> BButtonColors(
+                container = Color.Transparent,
+                onContainer = cs.primary,
+                disabledContainer = Color.Transparent,
+                disabledOnContainer = disabledContent(),
+                border = null
+            )
         }
+
+        if (selected) {
+            fun swap(c: Color, on: Color) = base.copy(container = on, onContainer = c)
+            return when (style) {
+                BButtonStyle.Filled -> swap(cs.primary, cs.onPrimary)
+                BButtonStyle.Tonal -> swap(cs.secondaryContainer, cs.onSecondaryContainer)
+                BButtonStyle.Elevated -> swap(cs.surface1, cs.onSurface)
+                BButtonStyle.Destructive -> swap(cs.error, cs.onError)
+                BButtonStyle.Success -> swap(cs.success, cs.onSuccess)
+                BButtonStyle.Warning -> swap(cs.warning, cs.onWarning)
+                BButtonStyle.Info -> swap(cs.info, cs.onInfo)
+                BButtonStyle.Outlined,
+                BButtonStyle.Text -> base.copy(
+                    container = cs.primary,
+                    onContainer = cs.onPrimary,
+                    border = null
+                )
+            }
+        }
+
+        return base
     }
 
     /** Size metrics derived from BSizes, Shapes, and Typography. */
@@ -202,7 +266,7 @@ object BButtonDefaults {
                 height = 56.dp,
                 horizontalPadding = 18.dp,
                 shape = sh.large,
-                iconSize = sz.iconLarge, // 32.dp
+                iconSize = sz.iconLarge,
                 gap = 10.dp,
                 textStyle = ty.titleSmall
             )
@@ -225,10 +289,17 @@ object BButtonDefaults {
             default = 1.dp,
             hovered = 2.dp,
             focused = 2.dp,
-            pressed = 1.dp
+            pressed = 1.dp,
+            selected = 1.dp
         )
 
-        else -> BButtonElevation(0.dp, 0.dp, 0.dp, 0.dp)
+        else -> BButtonElevation(
+            default = 0.dp,
+            hovered = 0.dp,
+            focused = 0.dp,
+            pressed = 0.dp,
+            selected = 0.dp
+        )
     }
 }
 
@@ -236,9 +307,13 @@ object BButtonDefaults {
 fun BButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    selected: Boolean = true,
     enabled: Boolean = true,
     style: BButtonStyle = BButtonStyle.Filled,
     size: BButtonSize = BButtonSize.Md,
+    colors: BButtonColors = BButtonDefaults.colors(style, enabled, selected),
+    metrics: BButtonMetrics = BButtonDefaults.metrics(size),
+    elevations: BButtonElevation = BButtonDefaults.elevation(style),
     leadingIcon: (@Composable (() -> Unit))? = null,
     trailingIcon: (@Composable (() -> Unit))? = null,
     loading: Boolean = false,
@@ -246,9 +321,6 @@ fun BButton(
     content: @Composable RowScope.() -> Unit
 ) {
     val cs = BTokens.colorScheme
-    val colors = BButtonDefaults.colors(style, enabled)
-    val metrics = BButtonDefaults.metrics(size)
-    val elevations = BButtonDefaults.elevation(style)
 
     val pressed by interactionSource.collectIsPressedAsState()
     val hovered by interactionSource.collectIsHoveredAsState()
@@ -272,6 +344,7 @@ fun BButton(
         pressed -> elevations.pressed
         hovered -> elevations.hovered
         focused -> elevations.focused
+        selected -> elevations.selected
         else -> elevations.default
     }
     val animatedElevation by animateDpAsState(currentElevationTarget, label = "elevation")
@@ -284,7 +357,11 @@ fun BButton(
     Surface(
         modifier = modifier
             .defaultMinSize(minHeight = metrics.height)
-            .semantics { role = Role.Button }
+            .semantics {
+                // to support TalkBack/automation
+                role = Role.Button
+                this.selected = selected
+            }
             .clip(metrics.shape)
             .drawBehind {
                 if (focused) {

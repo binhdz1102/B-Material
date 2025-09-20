@@ -37,4 +37,7 @@ dependencies {
     implementation(projects.uiCore.foundation)
 
     implementation(projects.uiComponents.button)
+    implementation(projects.uiComponents.switch)
+    implementation(projects.uiComponents.checkbox)
+    implementation(projects.uiComponents.card)
 }
