@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.b231001.bmaterial.uicomponents.bswitch.BSwitchGallery
 import com.b231001.bmaterial.uicomponents.button.BButtonGallery
 import com.b231001.bmaterial.uicomponents.button.BIconButtonGallery
+import com.b231001.bmaterial.uicomponents.card.BCardGallery
 import com.b231001.bmaterial.uicomponents.checkbox.BCheckboxGallery
 import com.b231001.bmaterial.uicore.tokens.BTheme
 import com.b231001.bmaterial.uicore.tokens.BTokens
@@ -39,11 +40,7 @@ class MainActivity : ComponentActivity() {
                             .verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.spacedBy(50.dp)
                     ) {
-
-
-
-
-
+                        BCardGallery()
 
                         BCheckboxGallery()
 
