@@ -1,5 +1,6 @@
 package com.b231001.bmaterial
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,11 +25,34 @@ import com.b231001.bmaterial.uicomponents.button.BIconButtonGallery
 import com.b231001.bmaterial.uicomponents.card.BCardGallery
 import com.b231001.bmaterial.uicomponents.checkbox.BCheckboxGallery
 import com.b231001.bmaterial.uicomponents.chip.BChipGallery
+import com.b231001.bmaterial.uicomponents.dialog.OverlayController
+import com.b231001.bmaterial.uicomponents.dialog.PopupGallery
+import com.b231001.bmaterial.uicomponents.dialog.canDrawOverlays
+import com.b231001.bmaterial.uicomponents.dialog.requestOverlayPermissionIfNeeded
 import com.b231001.bmaterial.uicomponents.listitem.BListItemGallery
 import com.b231001.bmaterial.uicore.tokens.BTheme
 import com.b231001.bmaterial.uicore.tokens.BTokens
 
 class MainActivity : ComponentActivity() {
+
+    override fun onStart() {
+        super.onStart()
+        requestOverlayPermissionIfNeeded()
+    }
+
+    // mở/tắt overlay từ app
+    fun openOverlay(context: Context) {
+        if (context.canDrawOverlays()) {
+            OverlayController.start(context)
+        }
+    }
+
+    fun closeOverlay(context: Context) {
+        OverlayController.stop(context)
+    }
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -42,6 +66,9 @@ class MainActivity : ComponentActivity() {
                             .verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.spacedBy(50.dp)
                     ) {
+                        PopupGallery()
+
+
                         BChipGallery()
 
                         BListItemGallery()
