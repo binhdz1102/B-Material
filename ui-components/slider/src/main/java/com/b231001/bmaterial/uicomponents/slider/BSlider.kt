@@ -1,0 +1,385 @@
+package com.b231001.bmaterial.uicomponents.slider
+
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.focusable
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
+import com.b231001.bmaterial.uicore.tokens.BTokens
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.roundToInt
+
+/**
+ * Note: the showTickMarks option is not fully developed and cannot work yet!
+ */
+@Composable
+fun BSlider(
+    value: Float,
+    modifier: Modifier = Modifier,
+    onValueChange: (Float) -> Unit,
+    onValueChangeFinished: (() -> Unit)? = null,
+    enabled: Boolean = true,
+    valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
+    steps: Int = 0,
+    allowedValues: List<Float>? = null,
+    limitMin: Float? = null,
+    limitMax: Float? = null,
+    showTickMarks: Boolean = (steps > 0 || allowedValues != null),
+    showValueLabel: Boolean = false,
+    style: BSliderStyle = BSliderStyle.Primary,
+    size: BSliderSize = BSliderSize.Md,
+    colors: BSliderColors = BSliderDefaults.colors(style),
+    metrics: BSliderMetrics = BSliderDefaults.metrics(size),
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    dragSpeedFactor: Float = 1.25f
+) {
+    val cs = BTokens.colorScheme
+    val density = LocalDensity.current
+
+    val minValue = valueRange.start
+    val maxValue = valueRange.endInclusive
+    val minLimit = limitMin ?: minValue
+    val maxLimit = limitMax ?: maxValue
+
+    val coercedValue = value.coerceIn(minValue, maxValue).coerceIn(minLimit, maxLimit)
+    var lastSentValue by remember { mutableFloatStateOf(coercedValue) }
+
+    val animatedValue by animateFloatAsState(
+        targetValue = coercedValue,
+        animationSpec = tween(150),
+        label = "BSliderValue"
+    )
+
+    var isDragging by remember { mutableStateOf(false) }
+
+    var pressStartX by remember { mutableFloatStateOf(Float.NaN) }
+    var startThumbCenterAtDrag by remember { mutableFloatStateOf(Float.NaN) }
+
+    fun positionToValue(xInTrackPx: Float, trackWidthPx: Float): Float {
+        if (trackWidthPx <= 0f) return minValue
+        val fraction = (xInTrackPx / trackWidthPx).coerceIn(0f, 1f)
+        var newValue = minValue + fraction * (maxValue - minValue)
+        if (!allowedValues.isNullOrEmpty()) {
+            val sorted = allowedValues.sorted()
+            newValue = sorted.minByOrNull { kotlin.math.abs(it - newValue) } ?: newValue
+        } else if (steps > 0) {
+            val stepCount = steps + 1
+            val stepIndex =
+                (((newValue - minValue) / (maxValue - minValue)) * stepCount).roundToInt()
+            val snapped = stepIndex.toFloat() / stepCount
+            newValue = minValue + snapped * (maxValue - minValue)
+        }
+        return newValue.coerceIn(minLimit, maxLimit)
+    }
+
+    // Geometry
+    var sliderWidth by remember { mutableFloatStateOf(0f) }
+    val thumbRadiusPx = with(density) { (metrics.thumbSize / 2).toPx() }
+    val trackLeftPx = thumbRadiusPx
+    val trackWidthPx = max(0f, sliderWidth - 2 * thumbRadiusPx)
+
+    val fractionFilled = if (maxValue > minValue) {
+        (animatedValue - minValue) / (maxValue - minValue)
+    } else {
+        0f
+    }
+
+    val fractionStartLimit = if (maxLimit > minLimit) {
+        (minLimit - minValue) / (maxValue - minValue)
+    } else {
+        0f
+    }
+    val fractionEndLimit = if (maxLimit > minLimit) {
+        (maxLimit - minValue) / (maxValue - minValue)
+    } else {
+        1f
+    }
+
+    val activeTrackColor = if (enabled) colors.trackActive else colors.disabledTrack
+    val inactiveTrackColor = if (enabled) colors.trackInactive else colors.disabledTrack
+
+    val thumbColor = if (enabled) colors.thumb else colors.disabledThumb
+    val thumbBorderColor = cs.outlineVariant.copy(alpha = if (enabled) 0.6f else 0.3f)
+
+    val thumbCenterX: Float = trackLeftPx + fractionFilled * trackWidthPx
+
+    // latest cho pointerInput
+    val latestTrackLeftPx by rememberUpdatedState(trackLeftPx)
+    val latestTrackWidthPx by rememberUpdatedState(trackWidthPx)
+    val latestThumbCenterX by rememberUpdatedState(thumbCenterX)
+    val latestLastSent by rememberUpdatedState(lastSentValue)
+
+    val focused by interactionSource.collectIsFocusedAsState()
+
+    val trackHeightAnim by animateDpAsState(
+        targetValue = if (isDragging) metrics.trackHeight * 1.6f else metrics.trackHeight,
+        animationSpec = tween(120),
+        label = "TrackGrow"
+    )
+
+    val gestureModifier = if (enabled) {
+        Modifier.pointerInput(enabled) {
+            detectDragGestures(
+                onDragStart = { offset ->
+                    isDragging = true
+                    pressStartX = offset.x
+                    startThumbCenterAtDrag = latestThumbCenterX
+
+                    val distToThumb = kotlin.math.abs(offset.x - latestThumbCenterX)
+                    if (distToThumb > thumbRadiusPx * 1.5f) {
+                        val newValue = positionToValue(
+                            offset.x - latestTrackLeftPx,
+                            latestTrackWidthPx
+                        )
+                        if (newValue != latestLastSent) {
+                            lastSentValue = newValue
+                            onValueChange(newValue)
+                        }
+                        val newFrac = (newValue - minValue) / (maxValue - minValue)
+                        startThumbCenterAtDrag = latestTrackLeftPx + newFrac * latestTrackWidthPx
+                    }
+                },
+                onDrag = { change, _ ->
+                    val virtualX =
+                        startThumbCenterAtDrag + (change.position.x - pressStartX) * dragSpeedFactor
+                    val newValue = positionToValue(
+                        virtualX - latestTrackLeftPx,
+                        latestTrackWidthPx
+                    )
+                    if (newValue != lastSentValue) {
+                        lastSentValue = newValue
+                        onValueChange(newValue)
+                    }
+                    change.consume()
+                },
+                onDragEnd = {
+                    isDragging = false
+                    onValueChangeFinished?.invoke()
+                },
+                onDragCancel = {
+                    isDragging = false
+                }
+            )
+        }
+    } else {
+        Modifier
+    }
+
+    val containerHeight = maxOf(metrics.thumbSize, metrics.trackHeight)
+
+    Box(
+        modifier
+            .fillMaxWidth()
+            .height(containerHeight)
+            .then(gestureModifier)
+            .focusable(enabled, interactionSource = interactionSource)
+            .onSizeChanged { sliderWidth = it.width.toFloat() }
+            .semantics(mergeDescendants = true) {}
+    ) {
+        // TRACK
+        Canvas(
+            Modifier
+                .fillMaxWidth()
+                .height(trackHeightAnim)
+                .align(Alignment.Center)
+        ) {
+            val canvasSize = this.size
+            val w = canvasSize.width
+            val h = canvasSize.height
+            val trackH = canvasSize.height
+            val trackR = trackH / 2
+
+            val startLimitX = fractionStartLimit * w
+            if (startLimitX > 0f) {
+                drawRoundRect(
+                    color = colors.disabledTrack,
+                    topLeft = Offset(0f, (h - trackH) / 2f),
+                    size = Size(startLimitX, trackH),
+                    cornerRadius = CornerRadius(trackR, trackR)
+                )
+            }
+
+            val endLimitX = fractionEndLimit * w
+            if (endLimitX < w) {
+                drawRoundRect(
+                    color = colors.disabledTrack,
+                    topLeft = Offset(endLimitX, (h - trackH) / 2f),
+                    size = Size(w - endLimitX, trackH),
+                    cornerRadius = CornerRadius(trackR, trackR)
+                )
+            }
+
+            val centralStart = max(0f, startLimitX)
+            val centralEnd = min(w, endLimitX)
+            val centralW = max(0f, centralEnd - centralStart)
+            if (centralW > 0f) {
+                drawRoundRect(
+                    color = inactiveTrackColor,
+                    topLeft = Offset(centralStart, (h - trackH) / 2f),
+                    size = Size(centralW, trackH),
+                    cornerRadius = CornerRadius(trackR, trackR)
+                )
+                val filledX =
+                    if (animatedValue <= minLimit) {
+                        0f
+                    } else {
+                        (
+                            (animatedValue.coerceAtMost(maxLimit) - minLimit) /
+                                (maxLimit - minLimit)
+                            ) * centralW
+                    }
+
+                if (filledX > 0f) {
+                    drawRoundRect(
+                        color = activeTrackColor,
+                        topLeft = Offset(centralStart, (h - trackH) / 2f),
+                        size = Size(filledX, trackH),
+                        cornerRadius = CornerRadius(trackR, trackR)
+                    )
+                }
+            }
+        }
+
+        // TICKS
+        if (showTickMarks) {
+            val ticks: List<Float> = when {
+                !allowedValues.isNullOrEmpty() -> {
+                    allowedValues.sorted().map {
+                        (it.coerceIn(minValue, maxValue) - minValue) / (maxValue - minValue)
+                    }
+                }
+
+                steps > 0 -> {
+                    val stepCount = steps + 1
+                    (0..stepCount).map { it.toFloat() / stepCount }
+                }
+
+                else -> listOf(0f, 1f)
+            }
+
+            ticks.forEach { frac ->
+                if (frac < fractionStartLimit || frac > fractionEndLimit) return@forEach
+                val xOffsetDp = with(density) { (frac * sliderWidth).toDp() }
+                val isActive = frac <= fractionFilled
+                Box(
+                    Modifier
+                        .offset(x = xOffsetDp - (metrics.tickSize / 2))
+                        .align(Alignment.CenterStart)
+                        .size(if (isActive) metrics.tickSize * 1.25f else metrics.tickSize)
+                        .background(
+                            if (isActive) colors.tickActive else colors.tickInactive,
+                            CircleShape
+                        )
+                        .zIndex(1f)
+                )
+            }
+        }
+
+        // TOOLTIP
+        if (showValueLabel && isDragging) {
+            SliderValueTooltip(
+                xPx = thumbCenterX,
+                text = "${lastSentValue.roundToInt()}",
+                parentWidthPx = sliderWidth
+            )
+        }
+
+        // THUMB
+        Box(
+            Modifier
+                .offset { IntOffset((thumbCenterX - thumbRadiusPx).roundToInt(), 0) }
+                .size(metrics.thumbSize)
+                .align(Alignment.CenterStart)
+                .zIndex(1.5f)
+        ) {
+            if (enabled && focused) {
+                Canvas(Modifier.matchParentSize()) {
+                    drawCircle(
+                        color = cs.onSurface.copy(alpha = 0.32f),
+                        radius = metrics.focusHaloRadius.toPx()
+                    )
+                }
+            }
+            Box(
+                Modifier
+                    .matchParentSize()
+                    .shadow(if (enabled) 2.dp else 0.dp, CircleShape, clip = false)
+                    .background(thumbColor, CircleShape)
+                    .border(1.dp, thumbBorderColor, CircleShape)
+            )
+        }
+    }
+}
+
+/** Tooltip displayed floating on track in xPx */
+@Composable
+private fun BoxScope.SliderValueTooltip(
+    xPx: Float,
+    text: String,
+    parentWidthPx: Float,
+    topPadding: Dp = 0.dp
+) {
+    val cs = BTokens.colorScheme
+    val density = LocalDensity.current
+    val labelWidth = 44.dp
+    val labelHeight = 26.dp
+    val arrowHeight = 6.dp
+
+    val halfLabelPx = with(density) { (labelWidth / 2).toPx() }
+    val clampedLeftPx =
+        (xPx - halfLabelPx).coerceIn(0f, parentWidthPx - with(density) { labelWidth.toPx() })
+    val xDp = with(density) { clampedLeftPx.toDp() }
+
+    Box(
+        Modifier
+            .zIndex(2f)
+            .align(Alignment.TopStart)
+            .offset(x = xDp, y = -(labelHeight + arrowHeight + 4.dp) - topPadding)
+            .size(labelWidth, labelHeight)
+            .background(cs.surface3, shape = RoundedCornerShape(6.dp))
+            .border(1.dp, cs.outlineVariant, RoundedCornerShape(6.dp)),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            style = BTokens.typography.labelMedium,
+            color = cs.onSurface
+        )
+    }
+}

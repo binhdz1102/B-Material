@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.b231001.bmaterial.uicomponents.slider"
+    namespace = "com.b231001.bmaterial.uicomponents.loading"
 }
 
 dependencies {
