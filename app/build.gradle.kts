@@ -42,4 +42,6 @@ dependencies {
     implementation(projects.uiComponents.card)
     implementation(projects.uiComponents.listitem)
     implementation(projects.uiComponents.chip)
+    implementation(projects.uiComponents.slider)
+    implementation(projects.uiComponents.layout)
 }

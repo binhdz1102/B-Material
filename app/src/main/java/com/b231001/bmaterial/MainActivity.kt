@@ -24,7 +24,11 @@ import com.b231001.bmaterial.uicomponents.button.BIconButtonGallery
 import com.b231001.bmaterial.uicomponents.card.BCardGallery
 import com.b231001.bmaterial.uicomponents.checkbox.BCheckboxGallery
 import com.b231001.bmaterial.uicomponents.chip.BChipGallery
+import com.b231001.bmaterial.uicomponents.layout.column.BColumnGallery
+import com.b231001.bmaterial.uicomponents.layout.row.BRowGallery
+import com.b231001.bmaterial.uicomponents.layout.tabrow.BTabRowGallery
 import com.b231001.bmaterial.uicomponents.listitem.BListItemGallery
+import com.b231001.bmaterial.uicomponents.slider.BSliderGallery
 import com.b231001.bmaterial.uicore.tokens.BTheme
 import com.b231001.bmaterial.uicore.tokens.BTokens
 
@@ -35,13 +39,20 @@ class MainActivity : ComponentActivity() {
         setContent {
             BTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-
                     Column(
                         Modifier
                             .padding(innerPadding)
                             .verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.spacedBy(50.dp)
                     ) {
+                        BRowGallery()
+
+                        BColumnGallery()
+
+                        BTabRowGallery()
+
+                        BSliderGallery()
+
                         BChipGallery()
 
                         BListItemGallery()
@@ -71,6 +82,7 @@ class MainActivity : ComponentActivity() {
                                 color = BTokens.colorScheme.background
                             )
                         }
+                        // /////////////////////////////////////////////////////////////////
                     }
                 }
             }

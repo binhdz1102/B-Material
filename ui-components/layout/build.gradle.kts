@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.b231001.bmaterial.uicomponents.slider"
+    namespace = "com.b231001.bmaterial.uicomponents.layout"
 }
 
 dependencies {
@@ -13,4 +13,5 @@ dependencies {
     implementation(libs.material)
 
     implementation(projects.uiCore.tokens)
+    implementation(projects.uiComponents.switch)
 }
