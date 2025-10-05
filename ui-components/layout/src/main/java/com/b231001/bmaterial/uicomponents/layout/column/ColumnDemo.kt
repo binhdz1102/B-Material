@@ -108,7 +108,7 @@ fun BColumnVisibleRangeDemo() {
     Box(
         Modifier
             .fillMaxWidth()
-            .height(remember { rH(300, 650).dp })
+            .height(300.dp)
             .clip(RoundedCornerShape(12.dp))
             .border(1.dp, BTokens.colorScheme.outlineVariant, RoundedCornerShape(12.dp))
     ) {
