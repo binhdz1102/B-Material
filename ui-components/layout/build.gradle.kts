@@ -13,4 +13,5 @@ dependencies {
     implementation(libs.material)
 
     implementation(projects.uiCore.tokens)
+    implementation(projects.uiComponents.switch)
 }
