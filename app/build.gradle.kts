@@ -44,4 +44,6 @@ dependencies {
     implementation(projects.uiComponents.chip)
     implementation(projects.uiComponents.slider)
     implementation(projects.uiComponents.layout)
+
+    implementation(projects.runtime.flow)
 }
