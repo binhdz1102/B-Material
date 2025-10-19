@@ -25,6 +25,7 @@ import com.b231001.bmaterial.uicomponents.card.BCardGallery
 import com.b231001.bmaterial.uicomponents.checkbox.BCheckboxGallery
 import com.b231001.bmaterial.uicomponents.chip.BChipGallery
 import com.b231001.bmaterial.uicomponents.layout.column.BColumnGallery
+import com.b231001.bmaterial.uicomponents.layout.row.BLazyRowGallery
 import com.b231001.bmaterial.uicomponents.layout.row.BRowGallery
 import com.b231001.bmaterial.uicomponents.layout.tabrow.BTabRowGallery
 import com.b231001.bmaterial.uicomponents.listitem.BListItemGallery
@@ -45,6 +46,8 @@ class MainActivity : ComponentActivity() {
                             .verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.spacedBy(50.dp)
                     ) {
+                        BLazyRowGallery()
+
                         BRowGallery()
 
                         BColumnGallery()
@@ -82,7 +85,7 @@ class MainActivity : ComponentActivity() {
                                 color = BTokens.colorScheme.background
                             )
                         }
-                        // /////////////////////////////////////////////////////////////////
+                        // ///////////////////////////////////////////////////////////////
                     }
                 }
             }
