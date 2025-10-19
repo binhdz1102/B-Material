@@ -14,4 +14,5 @@ dependencies {
 
     implementation(projects.uiCore.tokens)
     implementation(projects.uiComponents.switch)
+    implementation(projects.uiComponents.button)
 }
