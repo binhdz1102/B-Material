@@ -46,4 +46,5 @@ dependencies {
     implementation(projects.uiComponents.layout)
 
     implementation(projects.runtime.flow)
+    implementation(projects.runtime.debugger)
 }

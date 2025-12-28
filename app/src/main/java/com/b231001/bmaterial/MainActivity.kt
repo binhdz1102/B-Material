@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.b231001.bmaterial.runtime.debugger.DebuggerConsoleHost
 import com.b231001.bmaterial.uicomponents.bswitch.BSwitchGallery
 import com.b231001.bmaterial.uicomponents.button.BButtonGallery
 import com.b231001.bmaterial.uicomponents.button.BIconButtonGallery
@@ -38,54 +40,59 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            BTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Column(
-                        Modifier
-                            .padding(innerPadding)
-                            .verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.spacedBy(50.dp)
-                    ) {
-                        BLazyRowGallery()
-
-                        BRowGallery()
-
-                        BColumnGallery()
-
-                        BTabRowGallery()
-
-                        BSliderGallery()
-
-                        BChipGallery()
-
-                        BListItemGallery()
-
-                        BCardGallery()
-
-                        BCheckboxGallery()
-
-                        BSwitchGallery()
-
-                        BIconButtonGallery()
-
-                        BButtonGallery()
-
-                        Box(
+            DebuggerConsoleHost(
+                enabled = false,
+                windowModifier = Modifier.height(300.dp)
+            ) {
+                BTheme {
+                    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                        Column(
                             Modifier
-                                .padding(start = BTokens.paddings.large)
-                                .clip(BTokens.shapes.large)
-                                .background(color = BTokens.colorPalette.red.c40),
-                            contentAlignment = Alignment.Center
+                                .padding(innerPadding)
+                                .verticalScroll(rememberScrollState()),
+                            verticalArrangement = Arrangement.spacedBy(50.dp)
                         ) {
-                            Text(
-                                modifier = Modifier
-                                    .padding(BTokens.sizes.medium),
-                                text = "thử Nghiệm gõ Tiếng viỆt",
-                                style = BTokens.typography.titleMedium,
-                                color = BTokens.colorScheme.background
-                            )
+                            BLazyRowGallery()
+
+                            BRowGallery()
+
+                            BColumnGallery()
+
+                            BTabRowGallery()
+
+                            BSliderGallery()
+
+                            BChipGallery()
+
+                            BListItemGallery()
+
+                            BCardGallery()
+
+                            BCheckboxGallery()
+
+                            BSwitchGallery()
+
+                            BIconButtonGallery()
+
+                            BButtonGallery()
+
+                            Box(
+                                Modifier
+                                    .padding(start = BTokens.paddings.large)
+                                    .clip(BTokens.shapes.large)
+                                    .background(color = BTokens.colorPalette.red.c40),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    modifier = Modifier
+                                        .padding(BTokens.sizes.medium),
+                                    text = "thử Nghiệm gõ Tiếng viỆt",
+                                    style = BTokens.typography.titleMedium,
+                                    color = BTokens.colorScheme.background
+                                )
+                            }
+                            // ///////////////////////////////////////////////////////////////
                         }
-                        // ///////////////////////////////////////////////////////////////
                     }
                 }
             }
