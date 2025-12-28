@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.b231001.bmaterial.runtime.debugger.PrintLogDebug
 import com.b231001.bmaterial.uicomponents.bswitch.BSwitch
 import com.b231001.bmaterial.uicomponents.bswitch.BSwitchSize
 import com.b231001.bmaterial.uicore.tokens.BTheme
@@ -92,6 +93,13 @@ fun BRowVisibleRangeDemo() {
             Text(
                 "progress     = ${"%.0f".format(prog * 100)}%",
                 style = BTokens.typography.bodyMedium
+            )
+            PrintLogDebug(
+                color = BTokens.colorScheme.error,
+                tag = "BRowVisibleRangeDemo",
+                message = "firstVisible=$first, " +
+                    "lastVisible=$last, " +
+                    "progress=${"%.2f".format(prog)}"
             )
         }
     }
