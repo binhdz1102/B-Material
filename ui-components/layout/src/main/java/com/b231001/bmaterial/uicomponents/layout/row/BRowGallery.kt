@@ -160,7 +160,7 @@ fun BRowAutoDividerDemo() {
 fun BRowDemo() {
     val st = rememberBRowState()
     var lastEdge by remember { mutableStateOf<OverscrollEdge?>(null) }
-    var scrollEnabled by remember { mutableStateOf(true) }
+    var scrollEnabled by remember { mutableStateOf(false) }
 
     Column(Modifier.fillMaxWidth()) {
         Row(
