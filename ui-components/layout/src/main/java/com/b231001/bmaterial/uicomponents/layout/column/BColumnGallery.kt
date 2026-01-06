@@ -43,7 +43,7 @@ private fun rH(first: Int = 30, last: Int = 101): Int {
 fun BColumnDemo() {
     val st = rememberBColumnState()
     var lastEdge by remember { mutableStateOf<OverscrollEdge?>(null) }
-    var scrollEnabled by remember { mutableStateOf(true) }
+    var scrollEnabled by remember { mutableStateOf(false) }
 
     Column(Modifier.fillMaxWidth()) {
         Row(

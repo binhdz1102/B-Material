@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -66,8 +67,7 @@ fun BSlider(
     size: BSliderSize = BSliderSize.Md,
     colors: BSliderColors = BSliderDefaults.colors(style),
     metrics: BSliderMetrics = BSliderDefaults.metrics(size),
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    dragSpeedFactor: Float = 1.25f
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
 ) {
     val cs = BTokens.colorScheme
     val density = LocalDensity.current
@@ -80,16 +80,22 @@ fun BSlider(
     val coercedValue = value.coerceIn(minValue, maxValue).coerceIn(minLimit, maxLimit)
     var lastSentValue by remember { mutableFloatStateOf(coercedValue) }
 
-    val animatedValue by animateFloatAsState(
-        targetValue = coercedValue,
-        animationSpec = tween(150),
-        label = "BSliderValue"
-    )
-
     var isDragging by remember { mutableStateOf(false) }
 
-    var pressStartX by remember { mutableFloatStateOf(Float.NaN) }
-    var startThumbCenterAtDrag by remember { mutableFloatStateOf(Float.NaN) }
+    // Sync lastSentValue to the external value when not dragging
+    LaunchedEffect(coercedValue, isDragging) {
+        if (!isDragging) lastSentValue = coercedValue
+    }
+
+    // Animation is only used when not dragging.
+    val animatedValueWhenIdle by animateFloatAsState(
+        targetValue = coercedValue,
+        animationSpec = tween(150),
+        label = "BSliderValueIdle"
+    )
+
+    val uiValue = if (isDragging) lastSentValue else animatedValueWhenIdle
+    var dragOffsetFromThumbCenter by remember { mutableFloatStateOf(0f) }
 
     fun positionToValue(xInTrackPx: Float, trackWidthPx: Float): Float {
         if (trackWidthPx <= 0f) return minValue
@@ -115,7 +121,7 @@ fun BSlider(
     val trackWidthPx = max(0f, sliderWidth - 2 * thumbRadiusPx)
 
     val fractionFilled = if (maxValue > minValue) {
-        (animatedValue - minValue) / (maxValue - minValue)
+        (uiValue - minValue) / (maxValue - minValue)
     } else {
         0f
     }
@@ -139,7 +145,6 @@ fun BSlider(
 
     val thumbCenterX: Float = trackLeftPx + fractionFilled * trackWidthPx
 
-    // latest cho pointerInput
     val latestTrackLeftPx by rememberUpdatedState(trackLeftPx)
     val latestTrackWidthPx by rememberUpdatedState(trackWidthPx)
     val latestThumbCenterX by rememberUpdatedState(thumbCenterX)
@@ -154,15 +159,21 @@ fun BSlider(
     )
 
     val gestureModifier = if (enabled) {
-        Modifier.pointerInput(enabled) {
+        Modifier.pointerInput(true) {
             detectDragGestures(
                 onDragStart = { offset ->
                     isDragging = true
-                    pressStartX = offset.x
-                    startThumbCenterAtDrag = latestThumbCenterX
 
                     val distToThumb = kotlin.math.abs(offset.x - latestThumbCenterX)
-                    if (distToThumb > thumbRadiusPx * 1.5f) {
+                    val isPressOnThumb = distToThumb <= thumbRadiusPx * 1.5f
+
+                    dragOffsetFromThumbCenter = if (isPressOnThumb) {
+                        offset.x - latestThumbCenterX
+                    } else {
+                        0f
+                    }
+
+                    if (!isPressOnThumb) {
                         val newValue = positionToValue(
                             offset.x - latestTrackLeftPx,
                             latestTrackWidthPx
@@ -171,15 +182,12 @@ fun BSlider(
                             lastSentValue = newValue
                             onValueChange(newValue)
                         }
-                        val newFrac = (newValue - minValue) / (maxValue - minValue)
-                        startThumbCenterAtDrag = latestTrackLeftPx + newFrac * latestTrackWidthPx
                     }
                 },
                 onDrag = { change, _ ->
-                    val virtualX =
-                        startThumbCenterAtDrag + (change.position.x - pressStartX) * dragSpeedFactor
+                    val desiredThumbCenterX = change.position.x - dragOffsetFromThumbCenter
                     val newValue = positionToValue(
-                        virtualX - latestTrackLeftPx,
+                        desiredThumbCenterX - latestTrackLeftPx,
                         latestTrackWidthPx
                     )
                     if (newValue != lastSentValue) {
@@ -190,10 +198,12 @@ fun BSlider(
                 },
                 onDragEnd = {
                     isDragging = false
+                    dragOffsetFromThumbCenter = 0f
                     onValueChangeFinished?.invoke()
                 },
                 onDragCancel = {
                     isDragging = false
+                    dragOffsetFromThumbCenter = 0f
                 }
             )
         }
@@ -256,11 +266,11 @@ fun BSlider(
                     cornerRadius = CornerRadius(trackR, trackR)
                 )
                 val filledX =
-                    if (animatedValue <= minLimit) {
+                    if (uiValue <= minLimit) {
                         0f
                     } else {
                         (
-                            (animatedValue.coerceAtMost(maxLimit) - minLimit) /
+                            (uiValue.coerceAtMost(maxLimit) - minLimit) /
                                 (maxLimit - minLimit)
                             ) * centralW
                     }
