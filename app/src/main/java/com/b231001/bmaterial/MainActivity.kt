@@ -31,6 +31,7 @@ import com.b231001.bmaterial.uicomponents.layout.row.BLazyRowGallery
 import com.b231001.bmaterial.uicomponents.layout.row.BRowGallery
 import com.b231001.bmaterial.uicomponents.layout.tabrow.BTabRowGallery
 import com.b231001.bmaterial.uicomponents.listitem.BListItemGallery
+import com.b231001.bmaterial.uicomponents.loading.BLoadingGallery
 import com.b231001.bmaterial.uicomponents.slider.BSliderGallery
 import com.b231001.bmaterial.uicore.tokens.BTheme
 import com.b231001.bmaterial.uicore.tokens.BTokens
@@ -52,6 +53,8 @@ class MainActivity : ComponentActivity() {
                                 .verticalScroll(rememberScrollState()),
                             verticalArrangement = Arrangement.spacedBy(50.dp)
                         ) {
+                            BLoadingGallery()
+
                             BLazyRowGallery()
 
                             BRowGallery()
