@@ -1,7 +1,6 @@
 package com.b231001.bmaterial.uicomponents.slider
 
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -82,19 +81,11 @@ fun BSlider(
 
     var isDragging by remember { mutableStateOf(false) }
 
-    // Sync lastSentValue to the external value when not dragging
-    LaunchedEffect(coercedValue, isDragging) {
+    LaunchedEffect(coercedValue) {
         if (!isDragging) lastSentValue = coercedValue
     }
 
-    // Animation is only used when not dragging.
-    val animatedValueWhenIdle by animateFloatAsState(
-        targetValue = coercedValue,
-        animationSpec = tween(150),
-        label = "BSliderValueIdle"
-    )
-
-    val uiValue = if (isDragging) lastSentValue else animatedValueWhenIdle
+    val uiValue = lastSentValue
     var dragOffsetFromThumbCenter by remember { mutableFloatStateOf(0f) }
 
     fun positionToValue(xInTrackPx: Float, trackWidthPx: Float): Float {
