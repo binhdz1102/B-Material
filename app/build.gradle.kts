@@ -45,6 +45,7 @@ dependencies {
     implementation(projects.uiComponents.slider)
     implementation(projects.uiComponents.layout)
     implementation(projects.uiComponents.loading)
+    implementation(projects.uiComponents.scrollbar)
 
     implementation(projects.runtime.flow)
     implementation(projects.runtime.debugger)

@@ -65,6 +65,7 @@ appcompatVersion = "1.7.0"
 #androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 #material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
+androidx-animation-core = { module = "androidx.compose.animation:animation-core" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-compose-ui-ui-util = { group = "androidx.compose.ui", name = "ui-util" }
@@ -112,9 +113,11 @@ androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navig
 core = { group = "androidx.core", name = "core", version.ref = "coreVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompatVersion" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 
 [bundles]
 compose = [
+    "androidx-compose-foundation",
     "androidx-compose-ui",
     "androidx-compose-graphics",
     "androidx-compose-preview",
