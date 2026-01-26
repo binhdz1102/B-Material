@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import com.b231001.bmaterial.uicomponents.layout.row.BRowGallery
 import com.b231001.bmaterial.uicomponents.layout.tabrow.BTabRowGallery
 import com.b231001.bmaterial.uicomponents.listitem.BListItemGallery
 import com.b231001.bmaterial.uicomponents.loading.BLoadingGallery
+import com.b231001.bmaterial.uicomponents.scrollbar.bScrollbar
 import com.b231001.bmaterial.uicomponents.slider.BSliderGallery
 import com.b231001.bmaterial.uicore.tokens.BTheme
 import com.b231001.bmaterial.uicore.tokens.BTokens
@@ -42,6 +44,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val scrollState = rememberScrollState()
+
             DebuggerConsoleHost(
                 enabled = false,
                 windowModifier = Modifier.height(300.dp)
@@ -51,7 +55,13 @@ class MainActivity : ComponentActivity() {
                         Column(
                             Modifier
                                 .padding(innerPadding)
-                                .verticalScroll(rememberScrollState()),
+                                .bScrollbar(
+                                    state = scrollState,
+                                    orientation = Orientation.Vertical,
+                                    touchToSeekEnabled = true,
+                                    showTooltip = true
+                                )
+                                .verticalScroll(scrollState),
                             verticalArrangement = Arrangement.spacedBy(50.dp)
                         ) {
                             StickyOverlayGallery()
