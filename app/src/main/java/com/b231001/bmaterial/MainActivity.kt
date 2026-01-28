@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
@@ -32,6 +31,7 @@ import com.b231001.bmaterial.uicomponents.layout.overlay.StickyOverlayGallery
 import com.b231001.bmaterial.uicomponents.layout.row.BLazyRowGallery
 import com.b231001.bmaterial.uicomponents.layout.row.BRowGallery
 import com.b231001.bmaterial.uicomponents.layout.tabrow.BTabRowGallery
+import com.b231001.bmaterial.uicomponents.layout.util.verticalScrollWithBounce
 import com.b231001.bmaterial.uicomponents.listitem.BListItemGallery
 import com.b231001.bmaterial.uicomponents.loading.BLoadingGallery
 import com.b231001.bmaterial.uicomponents.scrollbar.bScrollbar
@@ -56,12 +56,12 @@ class MainActivity : ComponentActivity() {
                             Modifier
                                 .padding(innerPadding)
                                 .bScrollbar(
-                                    state = scrollState,
+                                    scrollState = scrollState,
                                     orientation = Orientation.Vertical,
                                     touchToSeekEnabled = true,
                                     showTooltip = true
                                 )
-                                .verticalScroll(scrollState),
+                                .verticalScrollWithBounce(scrollState = scrollState),
                             verticalArrangement = Arrangement.spacedBy(50.dp)
                         ) {
                             StickyOverlayGallery()
