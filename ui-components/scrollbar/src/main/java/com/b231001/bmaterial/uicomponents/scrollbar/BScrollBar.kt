@@ -60,7 +60,7 @@ data class BScrollbarStyle(
 )
 
 fun Modifier.bScrollbar(
-    state: ScrollState,
+    scrollState: ScrollState,
     orientation: Orientation = Orientation.Vertical,
     style: BScrollbarStyle = BScrollbarStyle(),
     touchToSeekEnabled: Boolean = true,
@@ -74,7 +74,7 @@ fun Modifier.bScrollbar(
         "${(p.coerceIn(0f, 1f) * 100f).roundToInt()}%"
     }
 ): Modifier = bScrollbarImpl(
-    adapter = ScrollStateAdapter(state),
+    adapter = ScrollStateAdapter(scrollState),
     orientation = orientation,
     style = style,
     touchToSeekEnabled = touchToSeekEnabled,
