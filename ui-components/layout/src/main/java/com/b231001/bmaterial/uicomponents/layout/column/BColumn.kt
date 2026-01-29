@@ -1,9 +1,9 @@
 package com.b231001.bmaterial.uicomponents.layout.column
 
-import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -18,32 +18,31 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
+import com.b231001.bmaterial.uicomponents.layout.util.bounceOverscroll
 import com.b231001.bmaterial.uicore.tokens.BTokens
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 
 @Stable
 class BColumnState internal constructor(
@@ -222,80 +221,50 @@ fun BColumn(
     },
     content: @Composable ColumnScope.() -> Unit
 ) {
-    val scope = rememberCoroutineScope()
-
-    var viewportHeightPx by remember { mutableStateOf(0f) }
+    var viewportHeightPx by remember { mutableFloatStateOf(0f) }
     val viewportCoords = remember { mutableStateOf<LayoutCoordinates?>(null) }
 
-    val overscrollAnim = remember { Animatable(0f) }
-    val onEdgeLatest by rememberUpdatedState(onOverscrollActivated)
+    // NEW: translation from rubber-band overscroll
+    var overscrollTranslationY by remember { mutableFloatStateOf(0f) }
 
+    val onEdgeLatest by rememberUpdatedState(onOverscrollActivated)
     var overscrollActive by remember { mutableStateOf(false) }
     var overscrollEdge by remember { mutableStateOf<OverscrollEdge?>(null) }
 
     val overscrollEnabled =
         scrollEnabled && (flingOverscrollEnabled || onOverscrollActivated != null)
 
-    val connection = remember(overscrollEnabled, state, viewportHeightPx) {
+    LaunchedEffect(overscrollEnabled) {
         if (!overscrollEnabled) {
-            object : NestedScrollConnection {}
-        } else {
-            object : NestedScrollConnection {
-                private fun maxStretch() = max(1f, viewportHeightPx * 0.25f)
+            overscrollTranslationY = 0f
+            overscrollActive = false
+            overscrollEdge = null
+            return@LaunchedEffect
+        }
 
-                override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                    if (source == NestedScrollSource.Drag && available.y != 0f) {
-                        val atTop = state.scrollState.value == 0
-                        val atEnd = state.scrollState.value == state.scrollState.maxValue
-                        val dy = available.y
-                        val pullTop = dy > 0 && atTop
-                        val pullEnd = dy < 0 && atEnd
-                        if (pullTop || pullEnd) {
-                            scope.launch {
-                                overscrollAnim.snapTo(
-                                    (overscrollAnim.value + dy * 0.5f)
-                                        .coerceIn(-maxStretch(), maxStretch())
-                                )
-                            }
-                            if (!overscrollActive) {
-                                overscrollActive = true
-                                overscrollEdge =
-                                    if (dy > 0) OverscrollEdge.Start else OverscrollEdge.End
-                                onEdgeLatest?.invoke(overscrollEdge!!)
-                            }
-                            return Offset(0f, dy)
-                        }
+        val activatePx = 1f
+        val settlePx = 0.5f
+        val settleDelayMs = 80L
+
+        snapshotFlow { overscrollTranslationY }
+            .collectLatest { t ->
+                val atRest = abs(t) < settlePx
+                val shouldActivate = abs(t) > activatePx
+
+                if (!overscrollActive) {
+                    if (shouldActivate) {
+                        overscrollActive = true
+                        overscrollEdge = if (t > 0f) OverscrollEdge.Start else OverscrollEdge.End
+                        onEdgeLatest?.invoke(overscrollEdge!!)
                     }
-                    return Offset.Zero
-                }
-
-                override fun onPostScroll(
-                    consumed: Offset,
-                    available: Offset,
-                    source: NestedScrollSource
-                ): Offset {
-                    if (source == NestedScrollSource.Drag && available.y != 0f) {
-                        scope.launch {
-                            overscrollAnim.snapTo(
-                                (overscrollAnim.value + available.y * 0.5f)
-                                    .coerceIn(-maxStretch(), maxStretch())
-                            )
-                        }
+                } else {
+                    if (atRest) {
+                        delay(settleDelayMs)
+                        overscrollActive = false
+                        overscrollEdge = null
                     }
-                    return Offset.Zero
-                }
-
-                override suspend fun onPostFling(
-                    consumed: Velocity,
-                    available: Velocity
-                ): Velocity {
-                    overscrollActive = false
-                    overscrollEdge = null
-                    overscrollAnim.animateTo(0f, spring(stiffness = Spring.StiffnessMediumLow))
-                    return Velocity.Zero
                 }
             }
-        }
     }
 
     val trackEnabled = onVisibleRangeChanged != null
@@ -310,7 +279,8 @@ fun BColumn(
             } else {
                 val qualified = itemBoxes.asSequence()
                     .map { (idx, b) ->
-                        val visibleH = (b.visibleBottomRel - b.visibleTopRel).coerceAtLeast(0f)
+                        val visibleH = (b.visibleBottomRel - b.visibleTopRel)
+                            .coerceAtLeast(0f)
                         val frac = if (b.fullHeight > 0f) visibleH / b.fullHeight else 0f
                         Triple(idx, b, frac)
                     }
@@ -330,11 +300,7 @@ fun BColumn(
 
     val onRangeLatest by rememberUpdatedState(onVisibleRangeChanged)
     LaunchedEffect(snapshot) {
-        onRangeLatest?.invoke(
-            snapshot.first,
-            snapshot.second,
-            snapshot.third
-        )
+        onRangeLatest?.invoke(snapshot.first, snapshot.second, snapshot.third)
     }
 
     val visibleCtx = remember(trackEnabled) {
@@ -348,9 +314,24 @@ fun BColumn(
                     viewportCoords.value = coords
                     viewportHeightPx = coords.size.height.toFloat()
                 }
-                .then(if (overscrollEnabled) Modifier.nestedScroll(connection) else Modifier)
+                .then(
+                    if (overscrollEnabled) {
+                        Modifier.bounceOverscroll(
+                            orientation = Orientation.Vertical,
+                            springSpec = spring(
+                                stiffness = Spring.StiffnessLow,
+                                dampingRatio = Spring.DampingRatioMediumBouncy
+                            ),
+                            rubberBandConstant = 0.55f,
+                            allowFlingOverscroll = flingOverscrollEnabled,
+                            onNewOverscrollTranslation = { overscrollTranslationY = it }
+                        )
+                    } else {
+                        Modifier
+                    }
+                )
                 .clipToBounds()
-                .graphicsLayer { translationY = overscrollAnim.value }
+                .graphicsLayer { translationY = overscrollTranslationY }
                 .then(if (scrollEnabled) Modifier.verticalScroll(state.scrollState) else Modifier),
             verticalArrangement = verticalArrangement,
             horizontalAlignment = horizontalAlignment
