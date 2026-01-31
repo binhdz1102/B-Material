@@ -91,23 +91,6 @@ class MainActivity : ComponentActivity() {
                             BIconButtonGallery()
 
                             BButtonGallery()
-
-                            Box(
-                                Modifier
-                                    .padding(start = BTokens.paddings.large)
-                                    .clip(BTokens.shapes.large)
-                                    .background(color = BTokens.colorPalette.red.c40),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    modifier = Modifier
-                                        .padding(BTokens.sizes.medium),
-                                    text = "thử Nghiệm gõ Tiếng viỆt",
-                                    style = BTokens.typography.titleMedium,
-                                    color = BTokens.colorScheme.background
-                                )
-                            }
-                            // ///////////////////////////////////////////////////////////////
                         }
                     }
                 }
