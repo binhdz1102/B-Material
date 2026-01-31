@@ -23,3 +23,9 @@ local.properties
 /.idea/other.xml
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/vcs.xml
+/runtime/build/intermediates/ktLint/reporterProviders.bin
+/ui-components/build/intermediates/ktLint/reporterProviders.bin
+/ui-core/build/intermediates/ktLint/reporterProviders.bin
+/runtime/build/intermediates/ktLint/reporters.bin
+/ui-components/build/intermediates/ktLint/reporters.bin
+/ui-core/build/intermediates/ktLint/reporters.bin
