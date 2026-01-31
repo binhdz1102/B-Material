@@ -45,6 +45,7 @@ androidxHiltNavigationCompose = "1.1.0"
 coreVersion = "1.13.0"
 espressoCore = "3.6.1"
 appcompatVersion = "1.7.0"
+fatAar = "1.3.8"
 
 
 
@@ -161,5 +162,6 @@ bmaterial-android-room = { id = "bmaterial.android.room", version = "unspecified
 bmaterial-android-application-jacoco = { id = "bmaterial.android.application.jacoco", version = "unspecified"}
 bmaterial-android-library-jacoco = { id = "bmaterial.android.library.jacoco", version = "unspecified"}
 bmaterial-android-navigation = { id = "bmaterial.android.navigation", version = "unspecified"}
+fatAar = { id = "com.kezong.fat-aar", version.ref = "fatAar" }
 
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "11.5.1" }
