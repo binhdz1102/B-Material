@@ -66,3 +66,38 @@ suspend fun <T> Iterable<T>.parallelFilter(
         for (i in list.indices) if (keep[i]) add(list[i])
     }
 }
+
+@OptIn(ExperimentalCoroutinesApi::class)
+suspend fun <T> Iterable<T>.parallelFind(
+    concurrency: Int = DEFAULT_CONCURRENCY,
+    dispatcher: CoroutineDispatcher = Dispatchers.Default,
+    predicate: suspend (T) -> Boolean
+): T? = coroutineScope {
+    val d = dispatcher.limitedParallelism(concurrency)
+    val list = this@parallelFind.toList()
+
+    val matches: List<Boolean> = list
+        .map { item -> async(d) { predicate(item) } }
+        .awaitAll()
+
+    val firstIndex = matches.indexOfFirst { it }
+    if (firstIndex >= 0) list[firstIndex] else null
+}
+
+@OptIn(ExperimentalCoroutinesApi::class)
+suspend fun <T> Iterable<T>.parallelFindAll(
+    concurrency: Int = DEFAULT_CONCURRENCY,
+    dispatcher: CoroutineDispatcher = Dispatchers.Default,
+    predicate: suspend (T) -> Boolean
+): List<T> = coroutineScope {
+    val d = dispatcher.limitedParallelism(concurrency)
+    val list = this@parallelFindAll.toList()
+
+    val keep: List<Boolean> = list
+        .map { item -> async(d) { predicate(item) } }
+        .awaitAll()
+
+    buildList {
+        for (i in list.indices) if (keep[i]) add(list[i])
+    }
+}
