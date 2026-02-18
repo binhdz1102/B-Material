@@ -81,5 +81,11 @@ gradlePlugin {
             id = "bmaterial.android.navigation"
             implementationClass = "AndroidNavigationConventionPlugin"
         }
+        plugins {
+            register("androidLibraryPublish") {
+                id = "bmaterial.android.publish"
+                implementationClass = "AndroidLibraryPublishConventionPlugin"
+            }
+        }
     }
 }

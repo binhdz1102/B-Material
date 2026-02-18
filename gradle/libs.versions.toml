@@ -161,5 +161,6 @@ bmaterial-android-room = { id = "bmaterial.android.room", version = "unspecified
 bmaterial-android-application-jacoco = { id = "bmaterial.android.application.jacoco", version = "unspecified"}
 bmaterial-android-library-jacoco = { id = "bmaterial.android.library.jacoco", version = "unspecified"}
 bmaterial-android-navigation = { id = "bmaterial.android.navigation", version = "unspecified"}
+bmaterial-android-publish = { id = "bmaterial.android.publish", version = "unspecified"}
 
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "11.5.1" }
