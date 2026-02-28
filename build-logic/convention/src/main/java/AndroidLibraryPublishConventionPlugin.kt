@@ -26,7 +26,7 @@ class AndroidLibraryPublishConventionPlugin : Plugin<Project> {
             val groupIdValue = providers.gradleProperty("POM_GROUP_ID")
                 .orElse("com.b231001.bmaterial")
             val versionValue = providers.gradleProperty("POM_VERSION")
-                .orElse("1.0.0")
+                .orElse("1.1.0")
 
             // artifactId: ui-core:tokens -> ui-core-tokens
             val artifactIdValue = path.removePrefix(":").replace(":", "-")
