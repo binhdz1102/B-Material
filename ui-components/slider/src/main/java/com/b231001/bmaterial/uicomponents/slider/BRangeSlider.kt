@@ -12,6 +12,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -32,6 +33,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
@@ -41,6 +43,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.b231001.bmaterial.uicore.tokens.BTokens
+import com.b231001.bmaterial.uicore.tokens.ComponentTokens
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -48,7 +52,7 @@ import kotlin.math.roundToInt
 private enum class ThumbDrag { Lower, Upper }
 
 /**
- * Note: the showTickMarks option is not fully developed and cannot work yet!
+ * Note: tick rendering is still limited and should be treated as experimental.
  */
 @Composable
 fun BRangeSlider(
@@ -72,7 +76,6 @@ fun BRangeSlider(
     val cs = BTokens.colorScheme
     val density = LocalDensity.current
 
-    // Normalize
     val minValue = valueRange.start
     val maxValue = valueRange.endInclusive
     val minLimit = limitMin ?: minValue
@@ -103,7 +106,6 @@ fun BRangeSlider(
 
     val focused by interactionSource.collectIsFocusedAsState()
 
-    // Geometry
     var sliderWidth by remember { mutableFloatStateOf(0f) }
     val thumbRadiusPx = with(density) { (metrics.thumbSize / 2).toPx() }
     val trackLeftPx = thumbRadiusPx
@@ -127,10 +129,14 @@ fun BRangeSlider(
     val inactiveTrackColor = if (enabled) colors.trackInactive else colors.disabledTrack
 
     val thumbColor = if (enabled) colors.thumb else colors.disabledThumb
-    val thumbBorderColor =
-        BTokens.colorScheme.outlineVariant.copy(alpha = if (enabled) 0.6f else 0.3f)
+    val thumbBorderColor = cs.outlineVariant.copy(
+        alpha = if (enabled) {
+            ComponentTokens.Alpha.ThumbBorderEnabled
+        } else {
+            ComponentTokens.Alpha.ThumbBorderDisabled
+        }
+    )
 
-    // latest geometry/state for pointerInput
     val latestTrackLeftPx by rememberUpdatedState(trackLeftPx)
     val latestTrackWidthPx by rememberUpdatedState(trackWidthPx)
     val latestLowerCenterX by rememberUpdatedState(lowerCenterX)
@@ -154,7 +160,11 @@ fun BRangeSlider(
     }
 
     val trackHeightAnim by animateDpAsState(
-        targetValue = if (isDragging) metrics.trackHeight * 1.6f else metrics.trackHeight,
+        targetValue = if (isDragging) {
+            metrics.trackHeight * ComponentTokens.Slider.TrackGrowFactor
+        } else {
+            metrics.trackHeight
+        },
         animationSpec = tween(120),
         label = "TrackGrow"
     )
@@ -165,15 +175,15 @@ fun BRangeSlider(
                 detectDragGestures(
                     onDragStart = { offset ->
                         val pressX = offset.x
-                        val dLower = kotlin.math.abs(pressX - latestLowerCenterX)
-                        val dUpper = kotlin.math.abs(pressX - latestUpperCenterX)
+                        val dLower = abs(pressX - latestLowerCenterX)
+                        val dUpper = abs(pressX - latestUpperCenterX)
                         draggingThumb = if (dLower <= dUpper) ThumbDrag.Lower else ThumbDrag.Upper
                         isDragging = true
                         lastDragPosX = Float.NaN
 
-                        // if 2 thumbs are overlapping (dLower≈dUpper)
-                        // → select according to the touching side
-                        if (kotlin.math.abs(dLower - dUpper) <= thumbRadiusPx * 0.25f) {
+                        if (abs(dLower - dUpper) <=
+                            thumbRadiusPx * ComponentTokens.Slider.OverlapSelectionThresholdFactor
+                        ) {
                             draggingThumb =
                                 if (pressX >= latestLowerCenterX) {
                                     ThumbDrag.Upper
@@ -182,11 +192,9 @@ fun BRangeSlider(
                                 }
                         }
 
-                        // If you press far thumb → jump the nearest thumb to the pressed position
                         val dist = if (draggingThumb == ThumbDrag.Lower) dLower else dUpper
-                        if (dist > thumbRadiusPx * 1.5f) {
-                            val newRaw =
-                                xToValue(pressX - latestTrackLeftPx, latestTrackWidthPx)
+                        if (dist > thumbRadiusPx * ComponentTokens.Slider.ThumbGrabRangeFactor) {
+                            val newRaw = xToValue(pressX - latestTrackLeftPx, latestTrackWidthPx)
                             val snapped = snapIfNeeded(newRaw)
                             if (draggingThumb == ThumbDrag.Lower) {
                                 val clamped = min(snapped, latestLastUpper)
@@ -209,7 +217,6 @@ fun BRangeSlider(
                         val dx = if (lastDragPosX.isNaN()) 0f else posX - lastDragPosX
                         lastDragPosX = posX
 
-                        // If the 2 ends overlap → select the thumb in the direction of the drag
                         if (latestLastLower == latestLastUpper && dx != 0f) {
                             draggingThumb = if (dx > 0f) ThumbDrag.Upper else ThumbDrag.Lower
                         }
@@ -266,7 +273,6 @@ fun BRangeSlider(
             .onSizeChanged { sliderWidth = it.width.toFloat() }
             .semantics(mergeDescendants = true) {}
     ) {
-        // TRACK
         Canvas(
             Modifier
                 .fillMaxWidth()
@@ -308,7 +314,6 @@ fun BRangeSlider(
             }
         }
 
-        // TICKS
         if (showTickMarks) {
             val ticks: List<Float> = if (steps > 0) {
                 val stepCount = steps + 1
@@ -324,7 +329,13 @@ fun BRangeSlider(
                     Modifier
                         .offset(x = xDp - (metrics.tickSize / 2))
                         .align(Alignment.CenterStart)
-                        .size(if (inside) metrics.tickSize * 1.25f else metrics.tickSize)
+                        .size(
+                            if (inside) {
+                                metrics.tickSize * ComponentTokens.Slider.ActiveTickScale
+                            } else {
+                                metrics.tickSize
+                            }
+                        )
                         .background(
                             if (inside) activeTrackColor else colors.tickInactive,
                             CircleShape
@@ -334,7 +345,6 @@ fun BRangeSlider(
             }
         }
 
-        // TOOLTIP
         if (showValueLabel && isDragging && draggingThumb == ThumbDrag.Lower) {
             SliderValueTooltip(
                 xPx = lowerCenterX,
@@ -350,55 +360,71 @@ fun BRangeSlider(
             )
         }
 
-        // LOWER THUMB
-        Box(
-            Modifier
-                .offset { IntOffset((lowerCenterX - thumbRadiusPx).roundToInt(), 0) }
-                .size(metrics.thumbSize)
-                .align(Alignment.CenterStart)
-                .zIndex(1.5f)
-        ) {
-            if (enabled && focused) {
-                Canvas(Modifier.matchParentSize()) {
-                    drawCircle(
-                        color = cs.onSurface.copy(alpha = 0.32f),
-                        radius = metrics.focusHaloRadius.toPx()
-                    )
-                }
-            }
-            Box(
-                Modifier
-                    .matchParentSize()
-                    .shadow(if (enabled) 2.dp else 0.dp, CircleShape, clip = false)
-                    .background(thumbColor, CircleShape)
-                    .border(1.dp, thumbBorderColor, CircleShape)
-            )
-        }
+        Thumb(
+            centerXPx = lowerCenterX,
+            thumbRadiusPx = thumbRadiusPx,
+            thumbSize = metrics.thumbSize,
+            enabled = enabled,
+            focused = focused,
+            focusHaloRadius = metrics.focusHaloRadius,
+            thumbColor = thumbColor,
+            thumbBorderColor = thumbBorderColor,
+            modifier = Modifier.align(Alignment.CenterStart)
+        )
 
-        // UPPER THUMB
+        Thumb(
+            centerXPx = upperCenterX,
+            thumbRadiusPx = thumbRadiusPx,
+            thumbSize = metrics.thumbSize,
+            enabled = enabled,
+            focused = focused,
+            focusHaloRadius = metrics.focusHaloRadius,
+            thumbColor = thumbColor,
+            thumbBorderColor = thumbBorderColor,
+            modifier = Modifier.align(Alignment.CenterStart)
+        )
+    }
+}
+
+@Composable
+private fun Thumb(
+    centerXPx: Float,
+    thumbRadiusPx: Float,
+    thumbSize: Dp,
+    enabled: Boolean,
+    focused: Boolean,
+    focusHaloRadius: Dp,
+    thumbColor: Color,
+    thumbBorderColor: Color,
+    modifier: Modifier = Modifier
+) {
+    val cs = BTokens.colorScheme
+
+    Box(
+        modifier
+            .offset { IntOffset((centerXPx - thumbRadiusPx).roundToInt(), 0) }
+            .size(thumbSize)
+            .zIndex(1.5f)
+    ) {
+        if (enabled && focused) {
+            Canvas(Modifier.fillMaxSize()) {
+                drawCircle(
+                    color = cs.onSurface.copy(alpha = ComponentTokens.Alpha.FocusRing),
+                    radius = focusHaloRadius.toPx()
+                )
+            }
+        }
         Box(
             Modifier
-                .offset { IntOffset((upperCenterX - thumbRadiusPx).roundToInt(), 0) }
-                .size(metrics.thumbSize)
-                .align(Alignment.CenterStart)
-                .zIndex(1.5f)
-        ) {
-            if (enabled && focused) {
-                Canvas(Modifier.matchParentSize()) {
-                    drawCircle(
-                        color = cs.onSurface.copy(alpha = 0.32f),
-                        radius = metrics.focusHaloRadius.toPx()
-                    )
-                }
-            }
-            Box(
-                Modifier
-                    .matchParentSize()
-                    .shadow(if (enabled) 2.dp else 0.dp, CircleShape, clip = false)
-                    .background(thumbColor, CircleShape)
-                    .border(1.dp, thumbBorderColor, CircleShape)
-            )
-        }
+                .fillMaxSize()
+                .shadow(
+                    if (enabled) ComponentTokens.Slider.ThumbShadow else 0.dp,
+                    CircleShape,
+                    clip = false
+                )
+                .background(thumbColor, CircleShape)
+                .border(ComponentTokens.Border.Thin, thumbBorderColor, CircleShape)
+        )
     }
 }
 
@@ -411,9 +437,9 @@ private fun BoxScope.SliderValueTooltip(
 ) {
     val cs = BTokens.colorScheme
     val density = LocalDensity.current
-    val labelWidth = 44.dp
-    val labelHeight = 26.dp
-    val arrowHeight = 6.dp
+    val labelWidth = ComponentTokens.Slider.TooltipWidth
+    val labelHeight = ComponentTokens.Slider.TooltipHeight
+    val arrowHeight = ComponentTokens.Slider.TooltipArrowHeight
 
     val halfLabelPx = with(density) { (labelWidth / 2).toPx() }
     val clampedLeftPx =
@@ -424,10 +450,20 @@ private fun BoxScope.SliderValueTooltip(
         Modifier
             .zIndex(2f)
             .align(Alignment.TopStart)
-            .offset(x = xDp, y = -(labelHeight + arrowHeight + 4.dp) - topPadding)
+            .offset(
+                x = xDp,
+                y = -(labelHeight + arrowHeight + ComponentTokens.Slider.TooltipGap) - topPadding
+            )
             .size(labelWidth, labelHeight)
-            .background(cs.surface3, shape = RoundedCornerShape(6.dp))
-            .border(1.dp, cs.outlineVariant, RoundedCornerShape(6.dp)),
+            .background(
+                cs.surface3,
+                shape = RoundedCornerShape(ComponentTokens.Slider.TooltipCorner)
+            )
+            .border(
+                ComponentTokens.Border.Thin,
+                cs.outlineVariant,
+                RoundedCornerShape(ComponentTokens.Slider.TooltipCorner)
+            ),
         contentAlignment = Alignment.Center
     ) {
         Text(

@@ -61,6 +61,8 @@ private fun Project.configureKotlin() {
             freeCompilerArgs = freeCompilerArgs + listOf(
                 // Enable experimental coroutines APIs, including Flow
                 "-opt-in=kotlinx.RequiresOptIn",
+                // Avoid invokedynamic string concatenation so R8 can shrink Android AARs cleanly.
+                "-Xstring-concat=inline",
             )
         }
     }

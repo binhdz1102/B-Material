@@ -1,3 +1,4 @@
+import com.android.build.gradle.LibraryExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
@@ -11,6 +12,14 @@ class AndroidLibraryPublishConventionPlugin : Plugin<Project> {
         // Only apply to library modules, not app
         pluginManager.withPlugin("com.android.library") {
             pluginManager.apply("maven-publish")
+
+            extensions.configure<LibraryExtension> {
+                publishing {
+                    singleVariant("release") {
+                        withSourcesJar()
+                    }
+                }
+            }
 
             // Credentials take from ~/.gradle/gradle.properties
             val userProvider = providers.gradleProperty("gpr.user")
@@ -26,7 +35,7 @@ class AndroidLibraryPublishConventionPlugin : Plugin<Project> {
             val groupIdValue = providers.gradleProperty("POM_GROUP_ID")
                 .orElse("com.b231001.bmaterial")
             val versionValue = providers.gradleProperty("POM_VERSION")
-                .orElse("1.1.0")
+                .orElse("1.2.0")
 
             // artifactId: ui-core:tokens -> ui-core-tokens
             val artifactIdValue = path.removePrefix(":").replace(":", "-")

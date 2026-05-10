@@ -28,6 +28,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.Velocity
+import com.b231001.bmaterial.uicore.tokens.ComponentTokens
 import kotlin.math.sign
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
@@ -123,7 +124,7 @@ fun Modifier.simpleBounceOverscroll(
                                 }
                             }
                         } catch (_: CancellationException) {
-                            // ignore
+                            // Cancellation is expected when a new gesture interrupts the decay animation.
                         }
                     }
 
@@ -156,7 +157,9 @@ fun Modifier.simpleBounceOverscroll(
 private fun transformOverscroll(raw: Float, length: Float): Float {
     val positive = raw > 0f
     val toTransform = if (positive) raw else -raw
-    val transformed = CBEasing.transform(toTransform / (length * 1.5f)) * length
+    val transformed = CBEasing.transform(
+        toTransform / (length * ComponentTokens.Overscroll.TransformLengthFactor)
+    ) * length
     return if (positive) transformed else -transformed
 }
 

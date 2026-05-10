@@ -34,8 +34,8 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.b231001.bmaterial.uicore.tokens.BTokens
+import com.b231001.bmaterial.uicore.tokens.ComponentTokens
 import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlinx.coroutines.Job
@@ -45,18 +45,18 @@ import kotlinx.coroutines.launch
 
 @Immutable
 data class BScrollbarStyle(
-    val thickness: Dp = 4.dp,
-    val padding: Dp = 2.dp,
-    val minThumbLength: Dp = 28.dp,
-    val cornerRadius: Dp = 999.dp,
-    val trackColor: Color = Color.Black.copy(alpha = 0.12f),
-    val thumbColor: Color = Color.Black.copy(alpha = 0.45f),
-    val tooltipBg: Color = Color.Black.copy(alpha = 0.78f),
-    val tooltipText: Color = Color.White,
-    val tooltipTextSize: TextUnit = 12.sp,
-    val tooltipPaddingH: Dp = 8.dp,
-    val tooltipPaddingV: Dp = 4.dp,
-    val tooltipGapFromThumb: Dp = 8.dp
+    val thickness: Dp = ComponentTokens.Scrollbar.Thickness,
+    val padding: Dp = ComponentTokens.Scrollbar.Padding,
+    val minThumbLength: Dp = ComponentTokens.Scrollbar.MinThumbLength,
+    val cornerRadius: Dp = ComponentTokens.Scrollbar.CornerRadius,
+    val trackColor: Color = Color.Unspecified,
+    val thumbColor: Color = Color.Unspecified,
+    val tooltipBg: Color = Color.Unspecified,
+    val tooltipText: Color = Color.Unspecified,
+    val tooltipTextSize: TextUnit = ComponentTokens.Scrollbar.TooltipTextSize,
+    val tooltipPaddingH: Dp = ComponentTokens.Scrollbar.TooltipPaddingH,
+    val tooltipPaddingV: Dp = ComponentTokens.Scrollbar.TooltipPaddingV,
+    val tooltipGapFromThumb: Dp = ComponentTokens.Scrollbar.TooltipGapFromThumb
 )
 
 fun Modifier.bScrollbar(
@@ -66,9 +66,9 @@ fun Modifier.bScrollbar(
     touchToSeekEnabled: Boolean = true,
     showTooltip: Boolean = true,
     autoHideEnabled: Boolean = true,
-    autoHideDelayMillis: Long = 700L,
-    fadeInMillis: Int = 120,
-    fadeOutMillis: Int = 250,
+    autoHideDelayMillis: Long = ComponentTokens.Scrollbar.AutoHideDelayMillis,
+    fadeInMillis: Int = ComponentTokens.Scrollbar.FadeInMillis,
+    fadeOutMillis: Int = ComponentTokens.Scrollbar.FadeOutMillis,
 
     tooltipFormatter: (progress01: Float) -> String = { p ->
         "${(p.coerceIn(0f, 1f) * 100f).roundToInt()}%"
@@ -93,9 +93,9 @@ fun Modifier.bLazyScrollbar(
     touchToSeekEnabled: Boolean = true,
     showTooltip: Boolean = true,
     autoHideEnabled: Boolean = true,
-    autoHideDelayMillis: Long = 700L,
-    fadeInMillis: Int = 120,
-    fadeOutMillis: Int = 250,
+    autoHideDelayMillis: Long = ComponentTokens.Scrollbar.AutoHideDelayMillis,
+    fadeInMillis: Int = ComponentTokens.Scrollbar.FadeInMillis,
+    fadeOutMillis: Int = ComponentTokens.Scrollbar.FadeOutMillis,
     tooltipFormatter: (progress01: Float) -> String = { p ->
         "${(p.coerceIn(0f, 1f) * 100f).roundToInt()}%"
     }
@@ -200,17 +200,20 @@ private fun Modifier.bScrollbarImpl(
     tooltipFormatter: (Float) -> String
 ): Modifier = composed {
     val density = LocalDensity.current
+    val cs = BTokens.colorScheme
     val scope = rememberCoroutineScope()
+    val resolvedStyle = style.resolveDefaults(cs)
 
-    val thicknessPx = with(density) { style.thickness.toPx() }
-    val paddingPx = with(density) { style.padding.toPx() }
-    val minThumbPx = with(density) { style.minThumbLength.toPx() }
-    val radiusPx = with(density) { style.cornerRadius.toPx() }
+    val thicknessPx = with(density) { resolvedStyle.thickness.toPx() }
+    val paddingPx = with(density) { resolvedStyle.padding.toPx() }
+    val minThumbPx = with(density) { resolvedStyle.minThumbLength.toPx() }
+    val radiusPx = with(density) { resolvedStyle.cornerRadius.toPx() }
+    val hitSlopPx = with(density) { ComponentTokens.Scrollbar.HitSlop.toPx() }
 
-    val tipPadHPx = with(density) { style.tooltipPaddingH.toPx() }
-    val tipPadVPx = with(density) { style.tooltipPaddingV.toPx() }
-    val tipGapPx = with(density) { style.tooltipGapFromThumb.toPx() }
-    val tipTextSizePx = with(density) { style.tooltipTextSize.toPx() }
+    val tipPadHPx = with(density) { resolvedStyle.tooltipPaddingH.toPx() }
+    val tipPadVPx = with(density) { resolvedStyle.tooltipPaddingV.toPx() }
+    val tipGapPx = with(density) { resolvedStyle.tooltipGapFromThumb.toPx() }
+    val tipTextSizePx = with(density) { resolvedStyle.tooltipTextSize.toPx() }
 
     var hostSize by remember { mutableStateOf(Size.Zero) }
 
@@ -287,7 +290,7 @@ private fun Modifier.bScrollbarImpl(
     }
     SideEffect {
         textPaint.textSize = tipTextSizePx
-        textPaint.color = style.tooltipText.toArgb()
+        textPaint.color = resolvedStyle.tooltipText.toArgb()
     }
 
     fun isHitScrollbar(pos: Offset): Boolean {
@@ -298,10 +301,10 @@ private fun Modifier.bScrollbarImpl(
 
         return if (orientation == Orientation.Vertical) {
             val left = w - thicknessPx - paddingPx
-            pos.x >= (left - 12f) && pos.x <= w
+            pos.x >= (left - hitSlopPx) && pos.x <= w
         } else {
             val top = h - thicknessPx - paddingPx
-            pos.y >= (top - 12f) && pos.y <= h
+            pos.y >= (top - hitSlopPx) && pos.y <= h
         }
     }
 
@@ -425,7 +428,7 @@ private fun Modifier.bScrollbarImpl(
                         return raw.coerceIn(0f, 1f)
                     }
 
-                    // Seek on down
+                    // Seek immediately on pointer down so taps jump to the requested position.
                     seekAsync(posToProgress(down.position))
 
                     while (true) {
@@ -459,8 +462,10 @@ private fun Modifier.bScrollbarImpl(
             val alpha = if (autoHideEnabled) alphaAnim.value else 1f
             if (alpha <= 0.01f) return@drawWithContent
 
-            val trackC = style.trackColor.copy(alpha = style.trackColor.alpha * alpha)
-            val thumbC = style.thumbColor.copy(alpha = style.thumbColor.alpha * alpha)
+            val trackC =
+                resolvedStyle.trackColor.copy(alpha = resolvedStyle.trackColor.alpha * alpha)
+            val thumbC =
+                resolvedStyle.thumbColor.copy(alpha = resolvedStyle.thumbColor.alpha * alpha)
 
             // Track
             drawRoundRect(
@@ -508,7 +513,8 @@ private fun Modifier.bScrollbarImpl(
                         Offset(left, top)
                     }
 
-                    val tipBg = style.tooltipBg.copy(alpha = style.tooltipBg.alpha * alpha)
+                    val tipBg =
+                        resolvedStyle.tooltipBg.copy(alpha = resolvedStyle.tooltipBg.alpha * alpha)
 
                     drawRoundRect(
                         color = tipBg,
@@ -518,7 +524,7 @@ private fun Modifier.bScrollbarImpl(
                     )
 
                     drawIntoCanvas { canvas ->
-                        textPaint.color = style.tooltipText.toArgb()
+                        textPaint.color = resolvedStyle.tooltipText.toArgb()
                         val x = bubbleTopLeft.x + tipPadHPx
                         val baseline = bubbleTopLeft.y + tipPadVPx - textPaint.fontMetrics.top
                         canvas.nativeCanvas.drawText(text, x, baseline, textPaint)
@@ -527,3 +533,23 @@ private fun Modifier.bScrollbarImpl(
             }
         }
 }
+
+private fun BScrollbarStyle.resolveDefaults(cs: com.b231001.bmaterial.uicore.tokens.ColorScheme):
+    BScrollbarStyle = copy(
+    trackColor = if (trackColor == Color.Unspecified) {
+        cs.onSurface.copy(alpha = ComponentTokens.Scrollbar.TrackAlpha)
+    } else {
+        trackColor
+    },
+    thumbColor = if (thumbColor == Color.Unspecified) {
+        cs.onSurface.copy(alpha = ComponentTokens.Scrollbar.ThumbAlpha)
+    } else {
+        thumbColor
+    },
+    tooltipBg = if (tooltipBg == Color.Unspecified) {
+        cs.onSurface.copy(alpha = ComponentTokens.Scrollbar.TooltipBackgroundAlpha)
+    } else {
+        tooltipBg
+    },
+    tooltipText = if (tooltipText == Color.Unspecified) cs.surface else tooltipText
+)

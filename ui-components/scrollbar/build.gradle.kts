@@ -14,4 +14,5 @@ dependencies {
     implementation(libs.material)
 
     implementation(libs.androidx.animation.core)
+    implementation(projects.uiCore.tokens)
 }

@@ -35,9 +35,9 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.unit.dp
 import com.b231001.bmaterial.uicomponents.layout.util.bounceOverscroll
 import com.b231001.bmaterial.uicore.tokens.BTokens
+import com.b231001.bmaterial.uicore.tokens.ComponentTokens
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -216,7 +216,7 @@ fun BColumn(
         Divider(
             modifier = Modifier.fillMaxWidth(),
             color = BTokens.colorScheme.outlineVariant,
-            thickness = 1.dp
+            thickness = ComponentTokens.Layout.DividerThickness
         )
     },
     content: @Composable ColumnScope.() -> Unit
@@ -224,7 +224,7 @@ fun BColumn(
     var viewportHeightPx by remember { mutableFloatStateOf(0f) }
     val viewportCoords = remember { mutableStateOf<LayoutCoordinates?>(null) }
 
-    // NEW: translation from rubber-band overscroll
+    // Mirror the rubber-band offset so the content follows the overscroll effect.
     var overscrollTranslationY by remember { mutableFloatStateOf(0f) }
 
     val onEdgeLatest by rememberUpdatedState(onOverscrollActivated)
@@ -322,7 +322,7 @@ fun BColumn(
                                 stiffness = Spring.StiffnessLow,
                                 dampingRatio = Spring.DampingRatioMediumBouncy
                             ),
-                            rubberBandConstant = 0.55f,
+                            rubberBandConstant = ComponentTokens.Overscroll.RubberBandConstant,
                             allowFlingOverscroll = flingOverscrollEnabled,
                             onNewOverscrollTranslation = { overscrollTranslationY = it }
                         )

@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.bmaterial.android.library)
     alias(libs.plugins.bmaterial.android.library.compose)
-    alias(libs.plugins.bmaterial.android.publish)
 }
 
 android {

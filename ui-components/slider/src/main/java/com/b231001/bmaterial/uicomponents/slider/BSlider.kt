@@ -41,12 +41,13 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.b231001.bmaterial.uicore.tokens.BTokens
+import com.b231001.bmaterial.uicore.tokens.ComponentTokens
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
 /**
- * Note: the showTickMarks option is not fully developed and cannot work yet!
+ * Note: tick rendering is still limited and should be treated as experimental.
  */
 @Composable
 fun BSlider(
@@ -105,7 +106,7 @@ fun BSlider(
         return newValue.coerceIn(minLimit, maxLimit)
     }
 
-    // Geometry
+    // Track geometry in pixels.
     var sliderWidth by remember { mutableFloatStateOf(0f) }
     val thumbRadiusPx = with(density) { (metrics.thumbSize / 2).toPx() }
     val trackLeftPx = thumbRadiusPx
@@ -132,7 +133,13 @@ fun BSlider(
     val inactiveTrackColor = if (enabled) colors.trackInactive else colors.disabledTrack
 
     val thumbColor = if (enabled) colors.thumb else colors.disabledThumb
-    val thumbBorderColor = cs.outlineVariant.copy(alpha = if (enabled) 0.6f else 0.3f)
+    val thumbBorderColor = cs.outlineVariant.copy(
+        alpha = if (enabled) {
+            ComponentTokens.Alpha.ThumbBorderEnabled
+        } else {
+            ComponentTokens.Alpha.ThumbBorderDisabled
+        }
+    )
 
     val thumbCenterX: Float = trackLeftPx + fractionFilled * trackWidthPx
 
@@ -144,7 +151,11 @@ fun BSlider(
     val focused by interactionSource.collectIsFocusedAsState()
 
     val trackHeightAnim by animateDpAsState(
-        targetValue = if (isDragging) metrics.trackHeight * 1.6f else metrics.trackHeight,
+        targetValue = if (isDragging) {
+            metrics.trackHeight * ComponentTokens.Slider.TrackGrowFactor
+        } else {
+            metrics.trackHeight
+        },
         animationSpec = tween(120),
         label = "TrackGrow"
     )
@@ -156,7 +167,8 @@ fun BSlider(
                     isDragging = true
 
                     val distToThumb = kotlin.math.abs(offset.x - latestThumbCenterX)
-                    val isPressOnThumb = distToThumb <= thumbRadiusPx * 1.5f
+                    val isPressOnThumb =
+                        distToThumb <= thumbRadiusPx * ComponentTokens.Slider.ThumbGrabRangeFactor
 
                     dragOffsetFromThumbCenter = if (isPressOnThumb) {
                         offset.x - latestThumbCenterX
@@ -213,7 +225,7 @@ fun BSlider(
             .onSizeChanged { sliderWidth = it.width.toFloat() }
             .semantics(mergeDescendants = true) {}
     ) {
-        // TRACK
+        // Track
         Canvas(
             Modifier
                 .fillMaxWidth()
@@ -277,7 +289,7 @@ fun BSlider(
             }
         }
 
-        // TICKS
+        // Tick marks
         if (showTickMarks) {
             val ticks: List<Float> = when {
                 !allowedValues.isNullOrEmpty() -> {
@@ -302,7 +314,13 @@ fun BSlider(
                     Modifier
                         .offset(x = xOffsetDp - (metrics.tickSize / 2))
                         .align(Alignment.CenterStart)
-                        .size(if (isActive) metrics.tickSize * 1.25f else metrics.tickSize)
+                        .size(
+                            if (isActive) {
+                                metrics.tickSize * ComponentTokens.Slider.ActiveTickScale
+                            } else {
+                                metrics.tickSize
+                            }
+                        )
                         .background(
                             if (isActive) colors.tickActive else colors.tickInactive,
                             CircleShape
@@ -312,7 +330,7 @@ fun BSlider(
             }
         }
 
-        // TOOLTIP
+        // Floating value label shown while dragging.
         if (showValueLabel && isDragging) {
             SliderValueTooltip(
                 xPx = thumbCenterX,
@@ -321,7 +339,7 @@ fun BSlider(
             )
         }
 
-        // THUMB
+        // Thumb
         Box(
             Modifier
                 .offset { IntOffset((thumbCenterX - thumbRadiusPx).roundToInt(), 0) }
@@ -332,7 +350,7 @@ fun BSlider(
             if (enabled && focused) {
                 Canvas(Modifier.matchParentSize()) {
                     drawCircle(
-                        color = cs.onSurface.copy(alpha = 0.32f),
+                        color = cs.onSurface.copy(alpha = ComponentTokens.Alpha.FocusRing),
                         radius = metrics.focusHaloRadius.toPx()
                     )
                 }
@@ -340,15 +358,19 @@ fun BSlider(
             Box(
                 Modifier
                     .matchParentSize()
-                    .shadow(if (enabled) 2.dp else 0.dp, CircleShape, clip = false)
+                    .shadow(
+                        if (enabled) ComponentTokens.Slider.ThumbShadow else 0.dp,
+                        CircleShape,
+                        clip = false
+                    )
                     .background(thumbColor, CircleShape)
-                    .border(1.dp, thumbBorderColor, CircleShape)
+                    .border(ComponentTokens.Border.Thin, thumbBorderColor, CircleShape)
             )
         }
     }
 }
 
-/** Tooltip displayed floating on track in xPx */
+/** Floating value label positioned from the thumb center in pixels. */
 @Composable
 private fun BoxScope.SliderValueTooltip(
     xPx: Float,
@@ -358,9 +380,9 @@ private fun BoxScope.SliderValueTooltip(
 ) {
     val cs = BTokens.colorScheme
     val density = LocalDensity.current
-    val labelWidth = 44.dp
-    val labelHeight = 26.dp
-    val arrowHeight = 6.dp
+    val labelWidth = ComponentTokens.Slider.TooltipWidth
+    val labelHeight = ComponentTokens.Slider.TooltipHeight
+    val arrowHeight = ComponentTokens.Slider.TooltipArrowHeight
 
     val halfLabelPx = with(density) { (labelWidth / 2).toPx() }
     val clampedLeftPx =
@@ -371,10 +393,20 @@ private fun BoxScope.SliderValueTooltip(
         Modifier
             .zIndex(2f)
             .align(Alignment.TopStart)
-            .offset(x = xDp, y = -(labelHeight + arrowHeight + 4.dp) - topPadding)
+            .offset(
+                x = xDp,
+                y = -(labelHeight + arrowHeight + ComponentTokens.Slider.TooltipGap) - topPadding
+            )
             .size(labelWidth, labelHeight)
-            .background(cs.surface3, shape = RoundedCornerShape(6.dp))
-            .border(1.dp, cs.outlineVariant, RoundedCornerShape(6.dp)),
+            .background(
+                cs.surface3,
+                shape = RoundedCornerShape(ComponentTokens.Slider.TooltipCorner)
+            )
+            .border(
+                ComponentTokens.Border.Thin,
+                cs.outlineVariant,
+                RoundedCornerShape(ComponentTokens.Slider.TooltipCorner)
+            ),
         contentAlignment = Alignment.Center
     ) {
         Text(

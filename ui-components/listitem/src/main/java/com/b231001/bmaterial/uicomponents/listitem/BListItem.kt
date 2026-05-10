@@ -49,6 +49,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.b231001.bmaterial.uicore.tokens.BTokens
+import com.b231001.bmaterial.uicore.tokens.ComponentTokens
 
 @Stable
 sealed interface BListItemStyle {
@@ -99,8 +100,8 @@ object BListItemDefaults {
         val on = cs.onSurface
         val onVar = cs.onSurfaceVariant
 
-        fun disabledContainer() = on.copy(alpha = 0.12f)
-        fun disabledContent() = on.copy(alpha = 0.38f)
+        fun disabledContainer() = on.copy(alpha = ComponentTokens.Alpha.DisabledContainer)
+        fun disabledContent() = on.copy(alpha = ComponentTokens.Alpha.DisabledContent)
 
         val base = when (style) {
             BListItemStyle.Default -> BListItemColors(
@@ -137,9 +138,11 @@ object BListItemDefaults {
             BListItemStyle.Destructive -> BListItemColors(
                 container = cs.error,
                 onContainer = cs.onError,
-                supporting = cs.onError.copy(alpha = 0.9f),
-                overline = cs.onError.copy(alpha = 0.9f),
-                meta = cs.onError.copy(alpha = 0.9f),
+                supporting = cs.onError.copy(
+                    alpha = ComponentTokens.Alpha.SemanticContentEmphasis
+                ),
+                overline = cs.onError.copy(alpha = ComponentTokens.Alpha.SemanticContentEmphasis),
+                meta = cs.onError.copy(alpha = ComponentTokens.Alpha.SemanticContentEmphasis),
                 disabledContainer = disabledContainer(),
                 disabledContent = disabledContent()
             )
@@ -147,9 +150,13 @@ object BListItemDefaults {
             BListItemStyle.Success -> BListItemColors(
                 container = cs.success,
                 onContainer = cs.onSuccess,
-                supporting = cs.onSuccess.copy(alpha = 0.9f),
-                overline = cs.onSuccess.copy(alpha = 0.9f),
-                meta = cs.onSuccess.copy(alpha = 0.9f),
+                supporting = cs.onSuccess.copy(
+                    alpha = ComponentTokens.Alpha.SemanticContentEmphasis
+                ),
+                overline = cs.onSuccess.copy(
+                    alpha = ComponentTokens.Alpha.SemanticContentEmphasis
+                ),
+                meta = cs.onSuccess.copy(alpha = ComponentTokens.Alpha.SemanticContentEmphasis),
                 disabledContainer = disabledContainer(),
                 disabledContent = disabledContent()
             )
@@ -157,9 +164,13 @@ object BListItemDefaults {
             BListItemStyle.Warning -> BListItemColors(
                 container = cs.warning,
                 onContainer = cs.onWarning,
-                supporting = cs.onWarning.copy(alpha = 0.9f),
-                overline = cs.onWarning.copy(alpha = 0.9f),
-                meta = cs.onWarning.copy(alpha = 0.9f),
+                supporting = cs.onWarning.copy(
+                    alpha = ComponentTokens.Alpha.SemanticContentEmphasis
+                ),
+                overline = cs.onWarning.copy(
+                    alpha = ComponentTokens.Alpha.SemanticContentEmphasis
+                ),
+                meta = cs.onWarning.copy(alpha = ComponentTokens.Alpha.SemanticContentEmphasis),
                 disabledContainer = disabledContainer(),
                 disabledContent = disabledContent()
             )
@@ -167,9 +178,9 @@ object BListItemDefaults {
             BListItemStyle.Info -> BListItemColors(
                 container = cs.info,
                 onContainer = cs.onInfo,
-                supporting = cs.onInfo.copy(alpha = 0.9f),
-                overline = cs.onInfo.copy(alpha = 0.9f),
-                meta = cs.onInfo.copy(alpha = 0.9f),
+                supporting = cs.onInfo.copy(alpha = ComponentTokens.Alpha.SemanticContentEmphasis),
+                overline = cs.onInfo.copy(alpha = ComponentTokens.Alpha.SemanticContentEmphasis),
+                meta = cs.onInfo.copy(alpha = ComponentTokens.Alpha.SemanticContentEmphasis),
                 disabledContainer = disabledContainer(),
                 disabledContent = disabledContent()
             )
@@ -207,11 +218,9 @@ object BListItemDefaults {
         val sh = BTokens.shapes
         val pad = BTokens.paddings
 
-        // // 1–3 lines depending on the two flags withOverline, withSupporting
-        val lines =
-            (1 + (if (withOverline) 1 else 0) + (if (withSupporting) 1 else 0)).coerceIn(1, 3)
+        val lines = (1 + (if (withOverline) 1 else 0) + (if (withSupporting) 1 else 0))
+            .coerceIn(1, 3)
 
-        // Typography
         val headline = when (size) {
             BListItemSize.Compact -> ty.bodyLarge
             BListItemSize.Default -> ty.titleMedium
@@ -223,28 +232,91 @@ object BListItemDefaults {
 
         val pack: Pack = when (size) {
             BListItemSize.Compact -> when (lines) {
-                1 -> Pack(48.dp, 24.dp, 24.dp, 8.dp, sh.small, 0.dp)
-                2 -> Pack(64.dp, 24.dp, 24.dp, 8.dp, sh.small, 0.dp)
-                else -> Pack(80.dp, 24.dp, 24.dp, 8.dp, sh.small, 0.dp)
+                1 -> Pack(
+                    ComponentTokens.ListItem.CompactOneLineHeight,
+                    ComponentTokens.ListItem.CompactLeadingSize,
+                    ComponentTokens.ListItem.CompactTrailingMinWidth,
+                    ComponentTokens.ListItem.CompactSpacing,
+                    sh.small,
+                    0.dp
+                )
+                2 -> Pack(
+                    ComponentTokens.ListItem.CompactTwoLineHeight,
+                    ComponentTokens.ListItem.CompactLeadingSize,
+                    ComponentTokens.ListItem.CompactTrailingMinWidth,
+                    ComponentTokens.ListItem.CompactSpacing,
+                    sh.small,
+                    0.dp
+                )
+                else -> Pack(
+                    ComponentTokens.ListItem.CompactThreeLineHeight,
+                    ComponentTokens.ListItem.CompactLeadingSize,
+                    ComponentTokens.ListItem.CompactTrailingMinWidth,
+                    ComponentTokens.ListItem.CompactSpacing,
+                    sh.small,
+                    0.dp
+                )
             }
 
             BListItemSize.Default -> when (lines) {
-                1 -> Pack(56.dp, 28.dp, 28.dp, 12.dp, sh.medium, 0.dp)
-                2 -> Pack(72.dp, 28.dp, 28.dp, 12.dp, sh.medium, 0.dp)
-                else -> Pack(88.dp, 28.dp, 28.dp, 12.dp, sh.medium, 0.dp)
+                1 -> Pack(
+                    ComponentTokens.ListItem.DefaultOneLineHeight,
+                    ComponentTokens.ListItem.DefaultLeadingSize,
+                    ComponentTokens.ListItem.DefaultTrailingMinWidth,
+                    ComponentTokens.ListItem.DefaultSpacing,
+                    sh.medium,
+                    0.dp
+                )
+                2 -> Pack(
+                    ComponentTokens.ListItem.DefaultTwoLineHeight,
+                    ComponentTokens.ListItem.DefaultLeadingSize,
+                    ComponentTokens.ListItem.DefaultTrailingMinWidth,
+                    ComponentTokens.ListItem.DefaultSpacing,
+                    sh.medium,
+                    0.dp
+                )
+                else -> Pack(
+                    ComponentTokens.ListItem.DefaultThreeLineHeight,
+                    ComponentTokens.ListItem.DefaultLeadingSize,
+                    ComponentTokens.ListItem.DefaultTrailingMinWidth,
+                    ComponentTokens.ListItem.DefaultSpacing,
+                    sh.medium,
+                    0.dp
+                )
             }
 
             BListItemSize.Large -> when (lines) {
-                1 -> Pack(72.dp, 40.dp, 28.dp, 12.dp, sh.large, 1.dp)
-                2 -> Pack(88.dp, 40.dp, 28.dp, 12.dp, sh.large, 1.dp)
-                else -> Pack(100.dp, 40.dp, 28.dp, 12.dp, sh.large, 1.dp)
+                1 -> Pack(
+                    ComponentTokens.ListItem.LargeOneLineHeight,
+                    ComponentTokens.ListItem.LargeLeadingSize,
+                    ComponentTokens.ListItem.LargeTrailingMinWidth,
+                    ComponentTokens.ListItem.LargeSpacing,
+                    sh.large,
+                    ComponentTokens.ListItem.LargeElevation
+                )
+                2 -> Pack(
+                    ComponentTokens.ListItem.LargeTwoLineHeight,
+                    ComponentTokens.ListItem.LargeLeadingSize,
+                    ComponentTokens.ListItem.LargeTrailingMinWidth,
+                    ComponentTokens.ListItem.LargeSpacing,
+                    sh.large,
+                    ComponentTokens.ListItem.LargeElevation
+                )
+                else -> Pack(
+                    ComponentTokens.ListItem.LargeThreeLineHeight,
+                    ComponentTokens.ListItem.LargeLeadingSize,
+                    ComponentTokens.ListItem.LargeTrailingMinWidth,
+                    ComponentTokens.ListItem.LargeSpacing,
+                    sh.large,
+                    ComponentTokens.ListItem.LargeElevation
+                )
             }
         }
 
         val verticalPad = when (lines) {
             1 -> pad.small
-            2 -> pad.small + 2.dp
-            else -> pad.small + 4.dp
+            2 -> pad.small + ComponentTokens.ListItem.TwoLineVerticalPaddingExtra
+            else -> pad.small + ComponentTokens.ListItem.ThreeLineVerticalPaddingExtra
         }
 
         return BListItemMetrics(
@@ -275,7 +347,6 @@ fun BListItem(
     headline: String,
     supporting: String? = null,
     metaText: String? = null,
-    // Slots
     leading: (@Composable (() -> Unit))? = null,
     trailing: (@Composable (() -> Unit))? = null,
     onClick: (() -> Unit)? = null,
@@ -285,7 +356,7 @@ fun BListItem(
 ) {
     val cs = BTokens.colorScheme
 
-    // interaction states
+    // Interaction states
     val pressed by interactionSource.collectIsPressedAsState()
     val hovered by interactionSource.collectIsHoveredAsState()
     val focused by interactionSource.collectIsFocusedAsState()
@@ -299,8 +370,11 @@ fun BListItem(
         else -> Color.Transparent
     }
 
-    val selectedOverlay =
-        if (selected) colors.onContainer.copy(alpha = 0.12f) else Color.Transparent
+    val selectedOverlay = if (selected) {
+        colors.onContainer.copy(alpha = ComponentTokens.Alpha.SelectedOverlay)
+    } else {
+        Color.Transparent
+    }
 
     val targetAlpha = (interactionOverlay.alpha + selectedOverlay.alpha).coerceIn(0f, 1f)
     val overlayAlpha by animateFloatAsState(targetAlpha, label = "li-overlay-alpha")
@@ -327,7 +401,7 @@ fun BListItem(
         Modifier
     }
 
-    val borderStroke = colors.border?.let { BorderStroke(1.dp, it) }
+    val borderStroke = colors.border?.let { BorderStroke(ComponentTokens.Border.Thin, it) }
 
     Surface(
         modifier = modifier
@@ -382,7 +456,7 @@ fun BListItem(
                                 Text(overline, maxLines = 1, overflow = TextOverflow.Ellipsis)
                             }
                         }
-                        Spacer(Modifier.height(2.dp))
+                        Spacer(Modifier.height(ComponentTokens.ListItem.LineSpacer))
                     }
                     ProvideTextStyle(m.headline) {
                         CompositionLocalProvider(LocalContentColor provides colors.onContainer) {
@@ -394,7 +468,7 @@ fun BListItem(
                         }
                     }
                     if (supporting != null) {
-                        Spacer(Modifier.height(2.dp))
+                        Spacer(Modifier.height(ComponentTokens.ListItem.LineSpacer))
                         ProvideTextStyle(m.supporting) {
                             CompositionLocalProvider(LocalContentColor provides colors.supporting) {
                                 Text(supporting, maxLines = 2, overflow = TextOverflow.Ellipsis)

@@ -27,7 +27,7 @@ Add the following configuration to your `libs.versions.toml`:
 
 ```toml
 [versions]
-bmaterial = "1.1.0"
+bmaterial = "1.2.0"
 
 [libraries]
 bmaterial-ui-core-tokens = { group = "com.b231001.bmaterial", name = "ui-core-tokens", version.ref = "bmaterial" }

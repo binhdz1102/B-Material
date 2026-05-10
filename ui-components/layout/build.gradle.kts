@@ -17,5 +17,5 @@ dependencies {
     implementation(projects.uiComponents.switch)
     implementation(projects.uiComponents.button)
 
-    implementation(projects.runtime.debugger)
+    debugImplementation(projects.runtime.debugger)
 }

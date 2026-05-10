@@ -19,10 +19,10 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
+import com.b231001.bmaterial.uicore.tokens.ComponentTokens
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -51,11 +51,11 @@ data class StickyPlacement(
 
 @Stable
 class StickyOverlayState internal constructor() {
-    // anchor bounds in window coordinates
+    // Keep the latest anchor bounds in window coordinates for popup placement.
     var anchorBoundsInWindow: IntRect? by mutableStateOf(null)
         private set
 
-    // Expose placement info for debugging / analytics / UI hints
+    // Expose the resolved placement for debugging, analytics, or adaptive UI hints.
     private val _placement = MutableStateFlow<StickyPlacement?>(null)
     val placementFlow = _placement.asStateFlow()
 
@@ -69,7 +69,7 @@ class StickyOverlayState internal constructor() {
     }
 
     internal fun reportPlacement(p: StickyPlacement) {
-        // avoid noisy emissions
+        // Avoid noisy emissions when the popup stays in the same resolved position.
         val old = _placement.value
         if (old != p) _placement.tryEmit(p)
     }
@@ -86,7 +86,7 @@ fun Modifier.stickyOverlayAnchor(state: StickyOverlayState): Modifier = this.the
 )
 
 /**
- * StickyOverlayLayout: a Popup that chooses the best side around anchor to stay within screen.
+ * Popup-based overlay that chooses the best side around the anchor while staying on screen.
  */
 @Composable
 fun StickyOverlayLayout(
@@ -100,7 +100,7 @@ fun StickyOverlayLayout(
         StickySide.Left
     ),
     crossAxisAlign: StickyCrossAlign = StickyCrossAlign.Center,
-    margin: Dp = 8.dp,
+    margin: Dp = ComponentTokens.Layout.OverlayMargin,
     outsideTapBehavior: OutsideTapBehavior = OutsideTapBehavior.Dismiss,
     onDismissRequest: () -> Unit,
     content: @Composable BoxScope.() -> Unit
@@ -111,9 +111,7 @@ fun StickyOverlayLayout(
     val density = LocalDensity.current
     val marginPx = with(density) { margin.roundToPx() }
 
-    // For older Compose versions, recreating the provider when anchorRect
-    // changes forces reposition.
-    // Newer Compose also auto-updates position when state read during calculatePosition changes.
+    // Recreate the provider when anchor data changes so older Compose versions reposition reliably.
     val provider = remember(anchorRect, preferredSides, crossAxisAlign, marginPx) {
         StickyOverlayPositionProvider(
             anchorBoundsInWindow = anchorRect,
@@ -149,7 +147,7 @@ fun StickyOverlayLayout(
     }
 }
 
-// Position Provider
+// Popup position provider that prefers the requested sides before falling back to the most visible one.
 private class StickyOverlayPositionProvider(
     private val anchorBoundsInWindow: IntRect,
     private val preferredSides: List<StickySide>,
@@ -163,9 +161,7 @@ private class StickyOverlayPositionProvider(
         layoutDirection: LayoutDirection,
         popupContentSize: IntSize
     ): IntOffset {
-        // IMPORTANT: we ignore anchorBounds from Popup and use the real
-        // anchorBoundsInWindow we captured.
-        // PopupPositionProvider API provides windowSize + popupContentSize to compute position.
+        // Ignore Popup's anchorBounds and use the window-relative bounds captured from the real anchor.
         val a = anchorBoundsInWindow
         val pw = popupContentSize.width
         val ph = popupContentSize.height
@@ -237,13 +233,13 @@ private class StickyOverlayPositionProvider(
             }
         }
 
-        // 1) Pick the first that fully fits
+        // Prefer the first candidate that fits entirely inside the safe window bounds.
         val firstFit = candidates.firstOrNull { fitsFully(it.x, it.y) }
         val chosen = if (firstFit != null) {
             val (cx, cy) = clampToWindow(firstFit.x, firstFit.y)
             firstFit.copy(x = cx, y = cy)
         } else {
-            // 2) Otherwise pick the one with max visible intersection area, then clamp.
+            // Otherwise keep the side with the largest visible area, then clamp it into bounds.
             val best = candidates.maxByOrNull { intersectionArea(it.x, it.y) } ?: candidates.first()
             val (cx, cy) = clampToWindow(best.x, best.y)
             best.copy(x = cx, y = cy)

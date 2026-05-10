@@ -22,5 +22,5 @@ subprojects {
 // root build.gradle.kts
 allprojects {
     group = "com.b231001.bmaterial"
-    version = "1.1.0"
+    version = "1.2.0"
 }

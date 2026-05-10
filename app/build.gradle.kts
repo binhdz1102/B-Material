@@ -48,5 +48,5 @@ dependencies {
     implementation(projects.uiComponents.scrollbar)
 
     implementation(projects.runtime.flow)
-    implementation(projects.runtime.debugger)
+    debugImplementation(projects.runtime.debugger)
 }
