@@ -160,7 +160,14 @@ private class BLazyRowScopeImpl(
         itemContent: @Composable LazyItemScope.(item: T) -> Unit
     ) {
         val base = cursorIndex
-        items.forEachIndexed { i, it -> tagOf(it)?.let { t -> registrar.register(t, base + i) } }
+        items.forEachIndexed { i, item ->
+            tagOf(item)?.let { tag ->
+                registrar.register(
+                    tag,
+                    base + i
+                )
+            }
+        }
         items(
             count = items.size,
             key = if (key == null) null else { idx -> key(items[idx]) },
@@ -176,7 +183,7 @@ private class BLazyRowScopeImpl(
     ) {
         val myIndex = cursorIndex++
         delegate.stickyHeader(key = key, contentType = contentType) {
-            // Đo bề rộng header để bù trừ khi cuộn
+            // Measure the sticky header width so scroll offsets can compensate for pinned space.
             val measureModifier = Modifier.onSizeChanged { size ->
                 stateOwner.updateStickyHeaderWidth(myIndex, size.width)
             }

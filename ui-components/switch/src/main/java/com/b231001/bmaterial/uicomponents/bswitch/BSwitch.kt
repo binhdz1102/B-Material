@@ -40,6 +40,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.b231001.bmaterial.uicore.tokens.BTokens
+import com.b231001.bmaterial.uicore.tokens.ComponentTokens
 
 @Stable
 sealed interface BSwitchStyle {
@@ -88,8 +89,8 @@ object BSwitchDefaults {
     fun colors(style: BSwitchStyle): BSwitchColors {
         val cs = BTokens.colorScheme
 
-        val disabledTrack = cs.onSurface.copy(alpha = 0.12f)
-        val disabledThumb = cs.onSurface.copy(alpha = 0.38f)
+        val disabledTrack = cs.onSurface.copy(alpha = ComponentTokens.Alpha.DisabledContainer)
+        val disabledThumb = cs.onSurface.copy(alpha = ComponentTokens.Alpha.DisabledContent)
 
         val onTrack: Color
         val onThumb: Color
@@ -129,7 +130,7 @@ object BSwitchDefaults {
         return BSwitchColors(
             trackOn = onTrack,
             trackOff = offTrack,
-            thumbOn = Color.White.takeIf { onThumb == cs.onPrimary || onThumb == cs.onError }
+            thumbOn = cs.surface.takeIf { onThumb == cs.onPrimary || onThumb == cs.onError }
                 ?: cs.surface1,
             thumbOff = offThumb,
             borderOn = borderOn,
@@ -145,33 +146,33 @@ object BSwitchDefaults {
     fun metrics(size: BSwitchSize): BSwitchMetrics {
         return when (size) {
             BSwitchSize.Sm -> BSwitchMetrics(
-                width = 36.dp,
-                height = 20.dp,
-                thumbDiameter = 16.dp,
-                thumbPadding = 2.dp,
-                trackShape = RoundedCornerShape(10.dp),
-                focusRingRadius = 12.dp,
-                thumbElevation = 1.dp
+                width = ComponentTokens.Switch.SmWidth,
+                height = ComponentTokens.Switch.SmHeight,
+                thumbDiameter = ComponentTokens.Switch.SmThumbDiameter,
+                thumbPadding = ComponentTokens.Switch.SmThumbPadding,
+                trackShape = RoundedCornerShape(ComponentTokens.Switch.SmTrackCorner),
+                focusRingRadius = ComponentTokens.Switch.SmFocusRingRadius,
+                thumbElevation = ComponentTokens.Switch.SmThumbElevation
             )
 
             BSwitchSize.Md -> BSwitchMetrics(
-                width = 52.dp,
-                height = 32.dp,
-                thumbDiameter = 24.dp,
-                thumbPadding = 4.dp,
-                trackShape = RoundedCornerShape(16.dp),
-                focusRingRadius = 18.dp,
-                thumbElevation = 1.dp
+                width = ComponentTokens.Switch.MdWidth,
+                height = ComponentTokens.Switch.MdHeight,
+                thumbDiameter = ComponentTokens.Switch.MdThumbDiameter,
+                thumbPadding = ComponentTokens.Switch.DefaultThumbPadding,
+                trackShape = RoundedCornerShape(ComponentTokens.Switch.MdTrackCorner),
+                focusRingRadius = ComponentTokens.Switch.MdFocusRingRadius,
+                thumbElevation = ComponentTokens.Switch.MdThumbElevation
             )
 
             BSwitchSize.Lg -> BSwitchMetrics(
-                width = 64.dp,
-                height = 36.dp,
-                thumbDiameter = 28.dp,
-                thumbPadding = 4.dp,
-                trackShape = RoundedCornerShape(18.dp),
-                focusRingRadius = 20.dp,
-                thumbElevation = 2.dp
+                width = ComponentTokens.Switch.LgWidth,
+                height = ComponentTokens.Switch.LgHeight,
+                thumbDiameter = ComponentTokens.Switch.LgThumbDiameter,
+                thumbPadding = ComponentTokens.Switch.DefaultThumbPadding,
+                trackShape = RoundedCornerShape(ComponentTokens.Switch.LgTrackCorner),
+                focusRingRadius = ComponentTokens.Switch.LgFocusRingRadius,
+                thumbElevation = ComponentTokens.Switch.LgThumbElevation
             )
         }
     }
@@ -198,12 +199,7 @@ fun BSwitch(
     val dragged by interactionSource.collectIsDraggedAsState()
 
     val overlayBase: Color? = when {
-        dragged || pressed -> if (cs.onSurface == Color.Unspecified) {
-            cs.overlayPressed
-        } else {
-            cs.overlayPressed
-        }
-
+        dragged || pressed -> cs.overlayPressed
         hovered -> cs.overlayHover
         focused -> cs.overlayFocus
         else -> null
@@ -230,7 +226,7 @@ fun BSwitch(
 
     // Border
     val borderColor = if (!checked) colors.borderOff else colors.borderOn
-    val borderStroke = borderColor?.let { BorderStroke(1.dp, it) }
+    val borderStroke = borderColor?.let { BorderStroke(ComponentTokens.Border.Thin, it) }
 
     // Thumb position
     val travel = metrics.width - (metrics.thumbPadding * 2) - metrics.thumbDiameter
@@ -253,10 +249,10 @@ fun BSwitch(
                 interactionSource = interactionSource,
                 indication = indication
             )
-            .padding(2.dp) // space for focus ring drawing outside the track
+            .padding(ComponentTokens.Switch.FocusPadding) // Reserve outer space for the focus ring.
             .wrapContentSize()
     ) {
-        val focusStroke = 2.dp
+        val focusStroke = ComponentTokens.Border.Regular
         if (focused) {
             Box(
                 Modifier
@@ -268,7 +264,7 @@ fun BSwitch(
                         val canvasSize = this.size
 
                         drawRoundRect(
-                            color = cs.onSurface.copy(alpha = 0.32f),
+                            color = cs.onSurface.copy(alpha = ComponentTokens.Alpha.FocusRing),
                             topLeft = Offset(
                                 (canvasSize.width - w) / 2f,
                                 (canvasSize.height - h) / 2f

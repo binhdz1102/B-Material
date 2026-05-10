@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.ProvideTextStyle
@@ -43,6 +44,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.b231001.bmaterial.uicore.tokens.BTokens
+import com.b231001.bmaterial.uicore.tokens.ComponentTokens
 
 @Stable
 sealed interface BCardStyle {
@@ -97,8 +99,10 @@ object BCardDefaults {
         enabled: Boolean = true
     ): BCardColors {
         val cs = BTokens.colorScheme
-        val disabledContainer = cs.onSurface.copy(alpha = 0.06f)
-        val disabledContent = cs.onSurface.copy(alpha = 0.38f)
+        val disabledContainer =
+            cs.onSurface.copy(alpha = ComponentTokens.Alpha.DisabledContainerSubtle)
+        val disabledContent =
+            cs.onSurface.copy(alpha = ComponentTokens.Alpha.DisabledContent)
 
         val base = when (style) {
             BCardStyle.Filled -> BCardColors(
@@ -179,28 +183,28 @@ object BCardDefaults {
                 shape = sh.small,
                 verticalPadding = pad.small,
                 horizontalPadding = pad.medium,
-                mediaCornerRadius = 8.dp,
+                mediaCornerRadius = ComponentTokens.Card.SmallMediaCorner,
                 headerTextStyle = ty.titleSmall,
                 bodyTextStyle = ty.bodySmall,
-                actionGap = 8.dp
+                actionGap = ComponentTokens.Card.SmallActionGap
             )
             BCardSize.Md -> BCardMetrics(
                 shape = sh.medium,
                 verticalPadding = pad.medium,
                 horizontalPadding = pad.large,
-                mediaCornerRadius = 12.dp,
+                mediaCornerRadius = ComponentTokens.Card.MediumMediaCorner,
                 headerTextStyle = ty.titleMedium,
                 bodyTextStyle = ty.bodyMedium,
-                actionGap = 12.dp
+                actionGap = ComponentTokens.Card.MediumActionGap
             )
             BCardSize.Lg -> BCardMetrics(
                 shape = sh.large,
                 verticalPadding = pad.large,
                 horizontalPadding = pad.extraLarge,
-                mediaCornerRadius = 16.dp,
+                mediaCornerRadius = ComponentTokens.Card.LargeMediaCorner,
                 headerTextStyle = ty.titleLarge,
                 bodyTextStyle = ty.bodyLarge,
-                actionGap = 16.dp
+                actionGap = ComponentTokens.Card.LargeActionGap
             )
         }
     }
@@ -208,23 +212,23 @@ object BCardDefaults {
     @Composable
     fun elevation(style: BCardStyle): BCardElevation = when (style) {
         BCardStyle.Elevated -> BCardElevation(
-            default = 1.dp,
-            hovered = 2.dp,
-            focused = 2.dp,
-            pressed = 1.dp,
-            selected = 1.dp
+            default = ComponentTokens.Card.ElevatedDefault,
+            hovered = ComponentTokens.Card.ElevatedHovered,
+            focused = ComponentTokens.Card.ElevatedHovered,
+            pressed = ComponentTokens.Card.ElevatedDefault,
+            selected = ComponentTokens.Card.ElevatedDefault
         )
         BCardStyle.Outlined -> BCardElevation(
             default = 0.dp,
-            hovered = 1.dp,
-            focused = 1.dp,
+            hovered = ComponentTokens.Card.ElevatedDefault,
+            focused = ComponentTokens.Card.ElevatedDefault,
             pressed = 0.dp,
             selected = 0.dp
         )
         else -> BCardElevation(
             default = 0.dp,
-            hovered = 1.dp,
-            focused = 1.dp,
+            hovered = ComponentTokens.Card.ElevatedDefault,
+            focused = ComponentTokens.Card.ElevatedDefault,
             pressed = 0.dp,
             selected = 0.dp
         )
@@ -305,7 +309,7 @@ fun BCard(
         Modifier
     }
 
-    val outlineStroke = colors.outline?.let { BorderStroke(1.dp, it) }
+    val outlineStroke = colors.outline?.let { BorderStroke(ComponentTokens.Border.Thin, it) }
 
     Surface(
         modifier = modifier
@@ -335,18 +339,18 @@ fun BCard(
                         content = header
                     )
                 }
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(ComponentTokens.Card.SectionSpacing))
             }
 
             if (media != null) {
                 Box(
                     Modifier
                         .fillMaxWidth()
-                        .clip(metrics.shape)
+                        .clip(RoundedCornerShape(metrics.mediaCornerRadius))
                 ) {
                     media()
                 }
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(ComponentTokens.Card.SectionSpacing))
             }
 
             ProvideTextStyle(metrics.bodyTextStyle) {
@@ -356,7 +360,7 @@ fun BCard(
             }
 
             if (actions != null) {
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(ComponentTokens.Card.ActionsSpacing))
                 Row(
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(metrics.actionGap),

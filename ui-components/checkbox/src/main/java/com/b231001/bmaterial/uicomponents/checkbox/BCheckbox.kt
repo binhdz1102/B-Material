@@ -41,6 +41,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.b231001.bmaterial.uicore.tokens.BTokens
+import com.b231001.bmaterial.uicore.tokens.ComponentTokens
 
 @Stable
 sealed interface BCheckboxStyle {
@@ -98,8 +99,8 @@ object BCheckboxDefaults {
         val borderOff = cs.outlineVariant
         val borderOn: Color? = null
 
-        val disabledBox = cs.onSurface.copy(alpha = 0.12f)
-        val disabledCheck = cs.onSurface.copy(alpha = 0.38f)
+        val disabledBox = cs.onSurface.copy(alpha = ComponentTokens.Alpha.DisabledContainer)
+        val disabledCheck = cs.onSurface.copy(alpha = ComponentTokens.Alpha.DisabledContent)
 
         return BCheckboxColors(
             boxOn = boxOn,
@@ -118,27 +119,27 @@ object BCheckboxDefaults {
     @Composable
     fun metrics(size: BCheckboxSize): BCheckboxMetrics = when (size) {
         BCheckboxSize.Sm -> BCheckboxMetrics(
-            side = 18.dp,
-            corner = 4.dp,
-            borderWidth = 1.5.dp,
-            focusRingStroke = 2.dp,
-            checkStroke = 2.dp
+            side = ComponentTokens.Checkbox.SmSide,
+            corner = ComponentTokens.Checkbox.SmCorner,
+            borderWidth = ComponentTokens.Checkbox.SmBorderWidth,
+            focusRingStroke = ComponentTokens.Border.Regular,
+            checkStroke = ComponentTokens.Checkbox.SmCheckStroke
         )
 
         BCheckboxSize.Md -> BCheckboxMetrics(
-            side = 22.dp,
-            corner = 5.dp,
-            borderWidth = 2.dp,
-            focusRingStroke = 2.dp,
-            checkStroke = 2.5.dp
+            side = ComponentTokens.Checkbox.MdSide,
+            corner = ComponentTokens.Checkbox.MdCorner,
+            borderWidth = ComponentTokens.Checkbox.DefaultBorderWidth,
+            focusRingStroke = ComponentTokens.Border.Regular,
+            checkStroke = ComponentTokens.Checkbox.MdCheckStroke
         )
 
         BCheckboxSize.Lg -> BCheckboxMetrics(
-            side = 26.dp,
-            corner = 6.dp,
-            borderWidth = 2.dp,
-            focusRingStroke = 2.dp,
-            checkStroke = 3.dp
+            side = ComponentTokens.Checkbox.LgSide,
+            corner = ComponentTokens.Checkbox.LgCorner,
+            borderWidth = ComponentTokens.Checkbox.DefaultBorderWidth,
+            focusRingStroke = ComponentTokens.Border.Regular,
+            checkStroke = ComponentTokens.Checkbox.LgCheckStroke
         )
     }
 }
@@ -196,7 +197,10 @@ fun BCheckbox(
     val progress by animateFloatAsState(if (checked) 1f else 0f, label = "cbx-progress")
 
     // Slight lift on hover/focus
-    val shadow by animateDpAsState(if (hovered || focused) 1.dp else 0.dp, label = "cbx-shadow")
+    val shadow by animateDpAsState(
+        if (hovered || focused) ComponentTokens.Checkbox.HoveredElevation else 0.dp,
+        label = "cbx-shadow"
+    )
 
     val indication = rememberRipple(bounded = true)
 
@@ -214,7 +218,7 @@ fun BCheckbox(
                 interactionSource = interactionSource,
                 indication = indication
             )
-            .padding(2.dp) // space for focus ring drawing outside the track
+            .padding(ComponentTokens.Checkbox.FocusPadding) // Reserve outer space for the focus ring.
             .wrapContentSize()
     ) {
         // Focus
@@ -231,7 +235,7 @@ fun BCheckbox(
                         val topLeftX = (canvasSize.width - w) / 2f
                         val topLeftY = (canvasSize.height - h) / 2f
                         drawRoundRect(
-                            color = cs.onSurface.copy(alpha = 0.32f),
+                            color = cs.onSurface.copy(alpha = ComponentTokens.Alpha.FocusRing),
                             topLeft = Offset(topLeftX, topLeftY),
                             size = Size(w, h),
                             cornerRadius = CornerRadius(metrics.corner.toPx())

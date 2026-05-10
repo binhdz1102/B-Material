@@ -6,8 +6,8 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.b231001.bmaterial.uicore.tokens.BTokens
+import com.b231001.bmaterial.uicore.tokens.ComponentTokens
 
 @Stable
 sealed interface BSliderStyle {
@@ -54,7 +54,7 @@ object BSliderDefaults {
         }
 
         val thumbColor = if (thumbOnColor == cs.onPrimary || thumbOnColor == cs.onError) {
-            Color.White
+            cs.surface
         } else {
             cs.surface1
         }
@@ -66,8 +66,8 @@ object BSliderDefaults {
             thumb = thumbColor,
             tickActive = trackOnColor,
             tickInactive = trackOffColor,
-            disabledTrack = cs.onSurface.copy(alpha = 0.12f),
-            disabledThumb = cs.onSurface.copy(alpha = 0.38f)
+            disabledTrack = cs.onSurface.copy(alpha = ComponentTokens.Alpha.DisabledContainer),
+            disabledThumb = cs.onSurface.copy(alpha = ComponentTokens.Alpha.DisabledContent)
         )
     }
 
@@ -75,27 +75,33 @@ object BSliderDefaults {
     fun metrics(size: BSliderSize): BSliderMetrics =
         when (size) {
             BSliderSize.Sm -> BSliderMetrics(
-                trackHeight = 2.dp,
-                thumbSize = 16.dp,
-                trackShape = RoundedCornerShape(percent = 50),
-                focusHaloRadius = 12.dp,
-                tickSize = 2.dp
+                trackHeight = ComponentTokens.Slider.SmTrackHeight,
+                thumbSize = ComponentTokens.Slider.SmThumbSize,
+                trackShape = RoundedCornerShape(
+                    percent = ComponentTokens.Slider.TrackShapePercent
+                ),
+                focusHaloRadius = ComponentTokens.Slider.SmFocusHaloRadius,
+                tickSize = ComponentTokens.Slider.SmTickSize
             )
 
             BSliderSize.Md -> BSliderMetrics(
-                trackHeight = 4.dp,
-                thumbSize = 24.dp,
-                trackShape = RoundedCornerShape(percent = 50),
-                focusHaloRadius = 16.dp,
-                tickSize = 3.dp
+                trackHeight = ComponentTokens.Slider.MdTrackHeight,
+                thumbSize = ComponentTokens.Slider.MdThumbSize,
+                trackShape = RoundedCornerShape(
+                    percent = ComponentTokens.Slider.TrackShapePercent
+                ),
+                focusHaloRadius = ComponentTokens.Slider.MdFocusHaloRadius,
+                tickSize = ComponentTokens.Slider.MdTickSize
             )
 
             BSliderSize.Lg -> BSliderMetrics(
-                trackHeight = 6.dp,
-                thumbSize = 32.dp,
-                trackShape = RoundedCornerShape(percent = 50),
-                focusHaloRadius = 20.dp,
-                tickSize = 4.dp
+                trackHeight = ComponentTokens.Slider.LgTrackHeight,
+                thumbSize = ComponentTokens.Slider.LgThumbSize,
+                trackShape = RoundedCornerShape(
+                    percent = ComponentTokens.Slider.TrackShapePercent
+                ),
+                focusHaloRadius = ComponentTokens.Slider.LgFocusHaloRadius,
+                tickSize = ComponentTokens.Slider.LgTickSize
             )
         }
 }

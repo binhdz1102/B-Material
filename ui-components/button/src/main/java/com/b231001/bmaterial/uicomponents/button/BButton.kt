@@ -46,6 +46,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.b231001.bmaterial.uicore.tokens.BTokens
+import com.b231001.bmaterial.uicore.tokens.ComponentTokens
 
 @Stable
 sealed interface BButtonStyle {
@@ -101,9 +102,11 @@ object BButtonDefaults {
     ): BButtonColors {
         val cs = BTokens.colorScheme
 
-        // Color palette disabled (common in Material: 12%/38%)
-        fun disabledContainer(): Color = cs.onSurface.copy(alpha = 0.12f)
-        fun disabledContent(): Color = cs.onSurface.copy(alpha = 0.38f)
+        fun disabledContainer(): Color =
+            cs.onSurface.copy(alpha = ComponentTokens.Alpha.DisabledContainer)
+
+        fun disabledContent(): Color =
+            cs.onSurface.copy(alpha = ComponentTokens.Alpha.DisabledContent)
 
         if (!enabled) {
             return when (style) {
@@ -236,47 +239,47 @@ object BButtonDefaults {
         val ty = BTokens.typography
         return when (size) {
             BButtonSize.Xs -> BButtonMetrics(
-                height = 32.dp,
-                horizontalPadding = 12.dp,
+                height = ComponentTokens.Button.XsHeight,
+                horizontalPadding = ComponentTokens.Button.XsHorizontalPadding,
                 shape = sh.small,
                 iconSize = sz.iconSmall,
-                gap = 8.dp,
+                gap = ComponentTokens.Button.DefaultGap,
                 textStyle = ty.labelMedium
             )
 
             BButtonSize.Sm -> BButtonMetrics(
-                height = 40.dp,
-                horizontalPadding = 14.dp,
+                height = ComponentTokens.Button.SmHeight,
+                horizontalPadding = ComponentTokens.Button.SmHorizontalPadding,
                 shape = sh.small,
                 iconSize = sz.iconMedium,
-                gap = 8.dp,
+                gap = ComponentTokens.Button.DefaultGap,
                 textStyle = ty.labelLarge
             )
 
             BButtonSize.Md -> BButtonMetrics(
-                height = 48.dp,
-                horizontalPadding = 16.dp,
+                height = ComponentTokens.Button.MdHeight,
+                horizontalPadding = ComponentTokens.Button.MdHorizontalPadding,
                 shape = sh.medium,
                 iconSize = sz.iconMedium,
-                gap = 8.dp,
+                gap = ComponentTokens.Button.DefaultGap,
                 textStyle = ty.labelLarge
             )
 
             BButtonSize.Lg -> BButtonMetrics(
-                height = 56.dp,
-                horizontalPadding = 18.dp,
+                height = ComponentTokens.Button.LgHeight,
+                horizontalPadding = ComponentTokens.Button.LgHorizontalPadding,
                 shape = sh.large,
                 iconSize = sz.iconLarge,
-                gap = 10.dp,
+                gap = ComponentTokens.Button.LgGap,
                 textStyle = ty.titleSmall
             )
 
             BButtonSize.Xl -> BButtonMetrics(
-                height = 64.dp,
-                horizontalPadding = 20.dp,
+                height = ComponentTokens.Button.XlHeight,
+                horizontalPadding = ComponentTokens.Button.XlHorizontalPadding,
                 shape = sh.extraLarge,
                 iconSize = sz.iconLarge,
-                gap = 12.dp,
+                gap = ComponentTokens.Button.XlGap,
                 textStyle = ty.titleSmall
             )
         }
@@ -286,11 +289,11 @@ object BButtonDefaults {
     @Composable
     fun elevation(style: BButtonStyle): BButtonElevation = when (style) {
         BButtonStyle.Elevated -> BButtonElevation(
-            default = 1.dp,
-            hovered = 2.dp,
-            focused = 2.dp,
-            pressed = 1.dp,
-            selected = 1.dp
+            default = ComponentTokens.Button.ElevatedDefault,
+            hovered = ComponentTokens.Button.ElevatedHovered,
+            focused = ComponentTokens.Button.ElevatedHovered,
+            pressed = ComponentTokens.Button.ElevatedDefault,
+            selected = ComponentTokens.Button.ElevatedDefault
         )
 
         else -> BButtonElevation(
@@ -347,10 +350,13 @@ fun BButton(
         selected -> elevations.selected
         else -> elevations.default
     }
-    val animatedElevation by animateDpAsState(currentElevationTarget, label = "elevation")
+    val animatedElevation by
+    animateDpAsState(currentElevationTarget, label = "elevation")
 
     val borderStroke: BorderStroke? = when (style) {
-        BButtonStyle.Outlined -> colors.border?.let { BorderStroke(1.dp, it) }
+        BButtonStyle.Outlined -> colors.border?.let {
+            BorderStroke(ComponentTokens.Border.Thin, it)
+        }
         else -> null
     }
 
@@ -358,23 +364,25 @@ fun BButton(
         modifier = modifier
             .defaultMinSize(minHeight = metrics.height)
             .semantics {
-                // to support TalkBack/automation
+                // Expose button role and selected state to accessibility services.
                 role = Role.Button
                 this.selected = selected
             }
             .clip(metrics.shape)
             .drawBehind {
                 if (focused) {
-                    val stroke = 2.dp.toPx()
+                    val stroke = ComponentTokens.Border.Regular.toPx()
                     val canvasSize = this.size
                     val w = canvasSize.width + stroke * 2
                     val h = canvasSize.height + stroke * 2
 
                     drawRoundRect(
-                        color = contentColor.copy(alpha = 0.32f),
+                        color = contentColor.copy(alpha = ComponentTokens.Alpha.FocusRing),
                         topLeft = Offset(-stroke, -stroke),
                         size = Size(w, h),
-                        cornerRadius = CornerRadius(8.dp.toPx())
+                        cornerRadius = CornerRadius(
+                            ComponentTokens.Button.FocusRingCorner.toPx()
+                        )
                     )
                 }
             },
@@ -418,7 +426,7 @@ fun BButton(
                 if (loading) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(metrics.iconSize),
-                        strokeWidth = 2.dp,
+                        strokeWidth = ComponentTokens.Border.Regular,
                         color = contentColor
                     )
                     Spacer(Modifier.width(gap))

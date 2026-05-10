@@ -29,6 +29,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.Velocity
+import com.b231001.bmaterial.uicore.tokens.ComponentTokens
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.abs
 import kotlin.math.sign
@@ -42,7 +43,7 @@ fun Modifier.verticalScrollWithBounce(
         stiffness = Spring.StiffnessLow,
         dampingRatio = Spring.DampingRatioMediumBouncy
     ),
-    rubberBandConstant: Float = 0.55f
+    rubberBandConstant: Float = ComponentTokens.Overscroll.RubberBandConstant
 ): Modifier = composed {
     var translation by remember { mutableFloatStateOf(0f) }
 
@@ -64,7 +65,7 @@ fun Modifier.horizontalScrollWithBounce(
         stiffness = Spring.StiffnessLow,
         dampingRatio = Spring.DampingRatioMediumBouncy
     ),
-    rubberBandConstant: Float = 0.55f
+    rubberBandConstant: Float = ComponentTokens.Overscroll.RubberBandConstant
 ): Modifier = composed {
     var translation by remember { mutableFloatStateOf(0f) }
 
@@ -85,9 +86,9 @@ fun Modifier.bounceOverscroll(
         stiffness = Spring.StiffnessLow,
         dampingRatio = Spring.DampingRatioMediumBouncy
     ),
-    rubberBandConstant: Float = 0.55f,
+    rubberBandConstant: Float = ComponentTokens.Overscroll.RubberBandConstant,
     allowFlingOverscroll: Boolean = true,
-    maxRawOverscrollFactor: Float = 1.5f
+    maxRawOverscrollFactor: Float = ComponentTokens.Overscroll.MaxRawFactor
 ): Modifier = composed {
     val overscrollAnim = remember { Animatable(0f) }
     var rawOverscroll by remember { mutableFloatStateOf(0f) }
@@ -197,7 +198,7 @@ fun Modifier.bounceOverscroll(
                 val current = rawOverscroll
                 if (current == 0f || v0 == 0f) return Velocity.Zero
 
-                // sync anim from raw and animate
+                // Restart the animation from the latest raw overscroll before handling fling momentum.
                 if (overscrollAnim.isRunning) overscrollAnim.stop()
                 overscrollAnim.snapTo(current)
 

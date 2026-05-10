@@ -24,8 +24,8 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.b231001.bmaterial.uicore.tokens.BTokens
+import com.b231001.bmaterial.uicore.tokens.ComponentTokens
 
 @Stable
 sealed interface BLoadingState {
@@ -50,8 +50,8 @@ private fun BLoadingState.progress(): Float? = when (this) {
 fun BCircularLoading(
     modifier: Modifier = Modifier,
     state: BLoadingState = BLoadingState.Indeterminate,
-    size: Dp = 40.dp,
-    strokeWidth: Dp = 4.dp,
+    size: Dp = ComponentTokens.Loading.CircularSize,
+    strokeWidth: Dp = ComponentTokens.Loading.CircularStrokeWidth,
     color: Color = BTokens.colorScheme.primary,
     trackColor: Color = BTokens.colorScheme.surfaceVariant
 ) {
@@ -83,7 +83,7 @@ fun BCircularLoading(
 fun BLinearLoading(
     modifier: Modifier = Modifier,
     state: BLoadingState = BLoadingState.Indeterminate,
-    height: Dp = 6.dp,
+    height: Dp = ComponentTokens.Loading.LinearHeight,
     color: Color = BTokens.colorScheme.primary,
     trackColor: Color = BTokens.colorScheme.surfaceVariant
 ) {
@@ -113,9 +113,9 @@ fun BLinearLoading(
 @Composable
 fun BDotsLoading(
     modifier: Modifier = Modifier,
-    dotSize: Dp = 10.dp,
+    dotSize: Dp = ComponentTokens.Loading.DotSize,
     color: Color = BTokens.colorScheme.primary,
-    spacing: Dp = 8.dp
+    spacing: Dp = ComponentTokens.Loading.DotSpacing
 ) {
     val transition = rememberInfiniteTransition(label = "b_dots_loading")
     val delays = listOf(0, 150, 300)

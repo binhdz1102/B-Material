@@ -29,3 +29,6 @@ local.properties
 /runtime/build/intermediates/ktLint/reporters.bin
 /ui-components/build/intermediates/ktLint/reporters.bin
 /ui-core/build/intermediates/ktLint/reporters.bin
+/.idea/AndroidProjectSystem.xml
+/.idea/runConfigurations.xml
+/.idea/markdown.xml

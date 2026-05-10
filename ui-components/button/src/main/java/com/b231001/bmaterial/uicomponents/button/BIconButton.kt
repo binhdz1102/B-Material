@@ -36,6 +36,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.b231001.bmaterial.uicore.tokens.BTokens
+import com.b231001.bmaterial.uicore.tokens.ComponentTokens
 import androidx.compose.ui.geometry.Size as GSize
 
 @Stable
@@ -83,8 +84,11 @@ object BIconButtonDefaults {
     fun colors(style: BIconButtonStyle): BIconButtonColors {
         val cs = BTokens.colorScheme
 
-        fun disabledContainer() = cs.onSurface.copy(alpha = 0.12f)
-        fun disabledContent() = cs.onSurface.copy(alpha = 0.38f)
+        fun disabledContainer() =
+            cs.onSurface.copy(alpha = ComponentTokens.Alpha.DisabledContainer)
+
+        fun disabledContent() =
+            cs.onSurface.copy(alpha = ComponentTokens.Alpha.DisabledContent)
 
         val onCont: Color
         val onIcon: Color
@@ -193,27 +197,27 @@ object BIconButtonDefaults {
     @Composable
     fun metrics(size: BIconButtonSize): BIconButtonMetrics = when (size) {
         BIconButtonSize.Sm -> BIconButtonMetrics(
-            size = 40.dp,
-            iconSize = 20.dp,
-            shapeCorner = 20.dp,
-            focusRingRadius = 14.dp,
+            size = ComponentTokens.IconButton.SmSize,
+            iconSize = ComponentTokens.IconButton.SmIconSize,
+            shapeCorner = ComponentTokens.IconButton.SmShapeCorner,
+            focusRingRadius = ComponentTokens.IconButton.SmFocusRingRadius,
             elevation = 0.dp
         )
 
         BIconButtonSize.Md -> BIconButtonMetrics(
-            size = 48.dp,
-            iconSize = 24.dp,
-            shapeCorner = 24.dp,
-            focusRingRadius = 18.dp,
+            size = ComponentTokens.IconButton.MdSize,
+            iconSize = ComponentTokens.IconButton.MdIconSize,
+            shapeCorner = ComponentTokens.IconButton.MdShapeCorner,
+            focusRingRadius = ComponentTokens.IconButton.MdFocusRingRadius,
             elevation = 0.dp
         )
 
         BIconButtonSize.Lg -> BIconButtonMetrics(
-            size = 56.dp,
-            iconSize = 28.dp,
-            shapeCorner = 28.dp,
-            focusRingRadius = 20.dp,
-            elevation = 1.dp
+            size = ComponentTokens.IconButton.LgSize,
+            iconSize = ComponentTokens.IconButton.LgIconSize,
+            shapeCorner = ComponentTokens.IconButton.LgShapeCorner,
+            focusRingRadius = ComponentTokens.IconButton.LgFocusRingRadius,
+            elevation = ComponentTokens.IconButton.LgElevation
         )
     }
 }
@@ -266,8 +270,8 @@ fun BIconButton(
     val contentColor by animateColorAsState(targetContent, label = "ib-content")
 
     val borderStroke: BorderStroke? = when {
-        checked -> colors.borderOn?.let { BorderStroke(1.dp, it) }
-        else -> colors.borderOff?.let { BorderStroke(1.dp, it) }
+        checked -> colors.borderOn?.let { BorderStroke(ComponentTokens.Border.Thin, it) }
+        else -> colors.borderOff?.let { BorderStroke(ComponentTokens.Border.Thin, it) }
     }
 
     val baseElevation = if (style == BIconButtonStyle.Elevated) metrics.elevation else 0.dp
@@ -308,13 +312,13 @@ fun BIconButton(
         if (focused) {
             Box(
                 Modifier.drawBehind {
-                    val stroke = 2.dp.toPx()
+                    val stroke = ComponentTokens.Border.Regular.toPx()
                     val canvasSize = this.size
 
                     val w = canvasSize.width + stroke * 2
                     val h = canvasSize.height + stroke * 2
                     drawRoundRect(
-                        color = contentColor.copy(alpha = 0.32f),
+                        color = contentColor.copy(alpha = ComponentTokens.Alpha.FocusRing),
                         topLeft = Offset(-stroke, -stroke),
                         size = GSize(w, h),
                         cornerRadius = CornerRadius(metrics.focusRingRadius.toPx())

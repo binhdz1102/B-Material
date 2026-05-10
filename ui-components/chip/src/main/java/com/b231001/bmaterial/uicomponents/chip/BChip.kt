@@ -44,13 +44,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.b231001.bmaterial.uicore.tokens.BTokens
+import com.b231001.bmaterial.uicore.tokens.ComponentTokens
 
 @Stable
 sealed interface BChipStyle {
     data object Filled : BChipStyle // primary / onPrimary
     data object Tonal : BChipStyle // secondaryContainer / onSecondaryContainer
     data object Outlined : BChipStyle // transparent + outline
-    data object Elevated : BChipStyle // surface1 + shadow subtle
+    data object Elevated : BChipStyle // surface1 + subtle shadow
     data object Destructive : BChipStyle // error / onError
     data object Success : BChipStyle // success / onSuccess
     data object Warning : BChipStyle // warning / onWarning
@@ -92,8 +93,11 @@ object BChipDefaults {
     fun colors(style: BChipStyle): BChipColors {
         val cs = BTokens.colorScheme
 
-        fun disabledContainer() = cs.onSurface.copy(alpha = 0.12f)
-        fun disabledContent() = cs.onSurface.copy(alpha = 0.38f)
+        fun disabledContainer() =
+            cs.onSurface.copy(alpha = ComponentTokens.Alpha.DisabledContainer)
+
+        fun disabledContent() =
+            cs.onSurface.copy(alpha = ComponentTokens.Alpha.DisabledContent)
 
         fun map(
             container: Color,
@@ -133,48 +137,47 @@ object BChipDefaults {
     fun metrics(size: BChipSize): BChipMetrics {
         val sh = BTokens.shapes
         val ty = BTokens.typography
-        val sz = BTokens.sizes
 
         return when (size) {
             BChipSize.Sm -> BChipMetrics(
-                height = 28.dp,
-                horizontalPadding = 10.dp,
+                height = ComponentTokens.Chip.SmHeight,
+                horizontalPadding = ComponentTokens.Chip.SmHorizontalPadding,
                 shape = sh.large,
-                iconSize = 16.dp,
-                avatarSize = 18.dp,
-                gap = 6.dp,
+                iconSize = ComponentTokens.Chip.SmIconSize,
+                avatarSize = ComponentTokens.Chip.SmAvatarSize,
+                gap = ComponentTokens.Chip.SmGap,
                 textStyle = ty.labelMedium,
-                borderWidth = 1.dp,
+                borderWidth = ComponentTokens.Border.Thin,
                 elevationDefault = 0.dp,
                 elevationFocused = 0.dp,
                 elevationPressed = 0.dp
             )
 
             BChipSize.Md -> BChipMetrics(
-                height = 32.dp,
-                horizontalPadding = 12.dp,
+                height = ComponentTokens.Chip.MdHeight,
+                horizontalPadding = ComponentTokens.Chip.MdHorizontalPadding,
                 shape = sh.large,
-                iconSize = 18.dp,
-                avatarSize = 20.dp,
-                gap = 8.dp,
+                iconSize = ComponentTokens.Chip.MdIconSize,
+                avatarSize = ComponentTokens.Chip.MdAvatarSize,
+                gap = ComponentTokens.Chip.MdGap,
                 textStyle = ty.labelLarge,
-                borderWidth = 1.dp,
+                borderWidth = ComponentTokens.Border.Thin,
                 elevationDefault = 0.dp,
                 elevationFocused = 0.dp,
                 elevationPressed = 0.dp
             )
 
             BChipSize.Lg -> BChipMetrics(
-                height = 40.dp,
-                horizontalPadding = 14.dp,
+                height = ComponentTokens.Chip.LgHeight,
+                horizontalPadding = ComponentTokens.Chip.LgHorizontalPadding,
                 shape = sh.extraLarge,
-                iconSize = sz.iconMedium,
-                avatarSize = 24.dp,
-                gap = 10.dp,
+                iconSize = ComponentTokens.Chip.LgIconSize,
+                avatarSize = ComponentTokens.Chip.LgAvatarSize,
+                gap = ComponentTokens.Chip.LgGap,
                 textStyle = ty.titleSmall,
-                borderWidth = 1.dp,
-                elevationDefault = 1.dp,
-                elevationFocused = 1.dp,
+                borderWidth = ComponentTokens.Border.Thin,
+                elevationDefault = ComponentTokens.Chip.LgElevation,
+                elevationFocused = ComponentTokens.Chip.LgElevation,
                 elevationPressed = 0.dp
             )
         }
@@ -230,7 +233,7 @@ fun BChip(
     val borderStroke = when {
         !enabled && style is BChipStyle.Outlined -> BorderStroke(
             metrics.borderWidth,
-            colors.disabledOnContainer.copy(alpha = 0.24f)
+            colors.disabledOnContainer.copy(alpha = ComponentTokens.Alpha.DisabledOutline)
         )
 
         style is BChipStyle.Outlined -> colors.border?.let { BorderStroke(metrics.borderWidth, it) }
@@ -268,8 +271,8 @@ fun BChip(
             .drawBehind {
                 if (focused) {
                     drawRoundRect(
-                        color = contentColor.copy(alpha = 0.28f),
-                        style = Stroke(width = 2.dp.toPx()),
+                        color = contentColor.copy(alpha = ComponentTokens.Alpha.ChipFocusRing),
+                        style = Stroke(width = ComponentTokens.Border.Regular.toPx()),
                         cornerRadius = androidx.compose.ui.geometry.CornerRadius(100f, 100f)
                     )
                 }
@@ -296,10 +299,14 @@ fun BChip(
                     Box(
                         Modifier
                             .size(metrics.iconSize)
-                            .padding(end = metrics.gap - 2.dp),
+                            .padding(
+                                end = metrics.gap - ComponentTokens.Chip.LeadingGapAdjustment
+                            ),
                         contentAlignment = Alignment.Center
                     ) {
-                        CompositionLocalProvider(LocalContentColor provides contentColor) {
+                        CompositionLocalProvider(
+                            LocalContentColor provides contentColor
+                        ) {
                             leadingIcon()
                         }
                     }

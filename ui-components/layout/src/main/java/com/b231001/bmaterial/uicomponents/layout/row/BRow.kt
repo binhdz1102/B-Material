@@ -41,6 +41,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import com.b231001.bmaterial.uicomponents.layout.util.bounceOverscroll
 import com.b231001.bmaterial.uicore.tokens.BTokens
+import com.b231001.bmaterial.uicore.tokens.ComponentTokens
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -123,7 +124,7 @@ fun BRow(
         Box(
             Modifier
                 .fillMaxHeight()
-                .width(1.dp)
+                .width(ComponentTokens.Layout.DividerThickness)
                 .background(BTokens.colorScheme.outlineVariant)
         )
     },
@@ -229,7 +230,7 @@ fun BRow(
                                 stiffness = Spring.StiffnessLow,
                                 dampingRatio = Spring.DampingRatioMediumBouncy
                             ),
-                            rubberBandConstant = 0.55f,
+                            rubberBandConstant = ComponentTokens.Overscroll.RubberBandConstant,
                             allowFlingOverscroll = flingOverscrollEnabled,
                             onNewOverscrollTranslation = { overscrollTranslationX = it }
                         )
@@ -267,7 +268,7 @@ fun BRow(
                                 Modifier
                                     .padding(vertical = 0.dp)
                                     .fillMaxHeight()
-                                    .width(8.dp)
+                                    .width(ComponentTokens.Layout.AutoDividerGap)
                             )
                             localDivider()
                         }

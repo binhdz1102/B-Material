@@ -31,9 +31,9 @@ import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.b231001.bmaterial.uicomponents.layout.tabrow.BTabRowDefaults.tabIndicatorOffset
 import com.b231001.bmaterial.uicore.tokens.BTokens
+import com.b231001.bmaterial.uicore.tokens.ComponentTokens
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -178,7 +178,7 @@ fun BScrollableTabRow(
                 .selectableGroup()
                 .clipToBounds()
         ) { constraints ->
-            val minTabWidthPx = 90.dp.roundToPx()
+            val minTabWidthPx = ComponentTokens.TabRow.MinScrollableTabWidth.roundToPx()
             val paddingPx = edgePadding.roundToPx()
             val gapPx = gap.roundToPx()
 
@@ -287,26 +287,26 @@ object BTabRowDefaults {
     fun indicatorColor(): Color = BTokens.colorScheme.primary
 
     @Composable
-    fun edgePadding(): Dp = 0.dp
+    fun edgePadding(): Dp = ComponentTokens.TabRow.EdgePadding
 
     @Composable
-    fun gap(): Dp = 0.dp
+    fun gap(): Dp = ComponentTokens.TabRow.Gap
 
     @Composable
-    fun tabsElevation(): Float = 0f
+    fun tabsElevation(): Float = ComponentTokens.TabRow.TabsElevation
 
     @Composable
-    fun dividerElevation(): Float = 1f
+    fun dividerElevation(): Float = ComponentTokens.TabRow.DividerElevation
 
     @Composable
-    fun indicatorElevation(): Float = 2f
+    fun indicatorElevation(): Float = ComponentTokens.TabRow.IndicatorElevation
 
     @Composable
     fun Divider() {
         Box(
             Modifier
                 .fillMaxWidth()
-                .height(1.dp)
+                .height(ComponentTokens.TabRow.DividerThickness)
                 .background(BTokens.colorScheme.outlineVariant)
         )
     }
@@ -333,12 +333,18 @@ object BTabRowDefaults {
     ) {
         val currentTabWidth by animateDpAsState(
             targetValue = currentTabPosition.width,
-            animationSpec = tween(durationMillis = 250, easing = FastOutSlowInEasing),
+            animationSpec = tween(
+                durationMillis = ComponentTokens.TabRow.ScrollAnimationMillis,
+                easing = FastOutSlowInEasing
+            ),
             label = ""
         )
         val indicatorOffset by animateDpAsState(
             targetValue = currentTabPosition.left,
-            animationSpec = tween(durationMillis = 250, easing = FastOutSlowInEasing),
+            animationSpec = tween(
+                durationMillis = ComponentTokens.TabRow.ScrollAnimationMillis,
+                easing = FastOutSlowInEasing
+            ),
             label = ""
         )
         fillMaxWidth()
@@ -395,6 +401,6 @@ private class ScrollableTabData(
 }
 
 private val ScrollableTabRowScrollSpec: AnimationSpec<Float> = tween(
-    durationMillis = 250,
+    durationMillis = ComponentTokens.TabRow.ScrollAnimationMillis,
     easing = FastOutSlowInEasing
 )
